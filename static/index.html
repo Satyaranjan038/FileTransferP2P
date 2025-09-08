@@ -1250,31 +1250,28 @@
           </div>
 
           <!-- Enhanced File Transfer Panel -->
-          <div class="transfer-panel">
+            <div class="transfer-panel">
             <div class="panel-title">📁 Multi-File Transfer (Up to 5GB each)</div>
             <div class="file-upload" onclick="document.getElementById('fileInput').click()" 
                  ondrop="handleDrop(event)" ondragover="handleDragOver(event)" 
                  ondragleave="handleDragLeave(event)">
               <div class="file-icon">📄</div>
-              <div class="file-upload-text">Click to select or drag multiple files here</div>
-              <div class="file-upload-desc">
+              <div style="font-weight: 700; margin-bottom: 8px; font-size: 1.1rem;">Click to select or drag multiple files here</div>
+              <div style="color: var(--gray); font-size: 0.95rem; line-height: 1.4;">
                 ✨ Multi-select supported<br>
                 🚀 Ultra-fast transfer up to 5GB per file<br>
                 📱 Any file type supported
               </div>
             </div>
-            <!-- <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileSelect()"> -->
-             <input type="file" id="fileInput" style="display:none;" 
-       multiple accept="*/*" capture="filesystem" onchange="handleFileSelect()">
-
+            <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileSelect()">
             
             <div id="fileList" class="file-list" style="display: none;"></div>
             
-            <div class="btn-group">
-              <button class="btn" onclick="selectAllFiles()" id="selectAllBtn" disabled>
+            <div style="display: flex; gap: 12px; margin: 16px 0;">
+              <button class="btn" onclick="selectAllFiles()" id="selectAllBtn" style="flex: 1;" disabled>
                 ✅ Select All
               </button>
-              <button class="btn secondary" onclick="clearFiles()" id="clearFilesBtn" disabled>
+              <button class="btn secondary" onclick="clearFiles()" id="clearFilesBtn" style="flex: 1;" disabled>
                 🗑️ Clear All
               </button>
             </div>
@@ -1296,7 +1293,6 @@
               </div>
             </div>
           </div>
-        </div>
 
         <!-- Enhanced Download Section -->
         <div id="downloadSection" class="download-section" style="display: none;">
