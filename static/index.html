@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>SecureShare Pro - Ultra-Fast P2P File Transfer</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -39,9 +39,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 0;
       position: relative;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     body::before {
@@ -63,23 +65,25 @@
     .container {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
-      border-radius: 24px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      overflow: hidden;
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      overflow-y: auto;
       width: 100%;
-      max-width: 1200px;
+      height: 100vh;
       position: relative;
       z-index: 1;
-      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .header {
       background: var(--gradient);
-      padding: 32px;
+      padding: 20px 16px;
       text-align: center;
       color: white;
       position: relative;
+      flex-shrink: 0;
     }
 
     .header::after {
@@ -93,9 +97,9 @@
     }
 
     .logo {
-      font-size: 2.8rem;
+      font-size: 1.8rem;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
       background: linear-gradient(135deg, #fff, #e0e7ff);
       -webkit-background-clip: text;
@@ -104,15 +108,16 @@
     }
 
     .tagline {
-      font-size: 1.2rem;
+      font-size: 0.9rem;
       opacity: 0.95;
       font-weight: 500;
     }
 
     .main-content {
-      padding: 40px;
-      height: calc(100vh - 200px);
+      padding: 16px;
+      flex: 1;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .section {
@@ -137,25 +142,24 @@
     }
 
     .role-selector {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      margin-bottom: 32px;
-      max-width: 800px;
-      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+      max-width: 100%;
     }
 
     .role-card {
       background: white;
       border: 2px solid var(--border);
-      border-radius: 20px;
-      padding: 40px 32px;
+      border-radius: 16px;
+      padding: 24px 20px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-      transform: perspective(1000px) rotateX(0deg);
+      touch-action: manipulation;
     }
 
     .role-card::before {
@@ -166,70 +170,73 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-      transition: left 0.8s;
+      transition: left 0.6s;
     }
 
+    .role-card:active::before,
     .role-card:hover::before {
       left: 100%;
     }
 
+    .role-card:active,
     .role-card:hover {
       border-color: var(--primary);
-      transform: perspective(1000px) rotateX(5deg) translateY(-8px) scale(1.02);
-      box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.3);
     }
 
+    .role-card.sender:active,
     .role-card.sender:hover {
       border-color: var(--primary);
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.15));
     }
 
+    .role-card.receiver:active,
     .role-card.receiver:hover {
       border-color: var(--secondary);
       background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(236, 72, 153, 0.15));
-      box-shadow: 0 20px 40px -10px rgba(236, 72, 153, 0.3);
+      box-shadow: 0 8px 24px -4px rgba(236, 72, 153, 0.3);
     }
 
     .role-icon {
-      font-size: 4rem;
-      margin-bottom: 20px;
+      font-size: 2.5rem;
+      margin-bottom: 12px;
       display: block;
       filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
     }
 
     .role-title {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       color: var(--dark);
     }
 
     .role-desc {
       color: var(--gray);
-      font-size: 1rem;
-      line-height: 1.6;
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
 
     .otp-section {
       text-align: center;
-      margin-bottom: 32px;
-      max-width: 600px;
-      margin: 0 auto 32px;
+      margin-bottom: 24px;
+      max-width: 100%;
     }
 
     .otp-display {
       background: var(--gradient);
       color: white;
-      font-size: 3.5rem;
+      font-size: 2rem;
       font-weight: 800;
-      letter-spacing: 12px;
-      padding: 32px 48px;
-      border-radius: 20px;
-      margin: 24px 0;
+      letter-spacing: 6px;
+      padding: 20px 16px;
+      border-radius: 16px;
+      margin: 16px 0;
       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
       position: relative;
       overflow: hidden;
-      box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.4);
     }
 
     .otp-display::after {
@@ -252,45 +259,50 @@
     .otp-inputs {
       display: flex;
       justify-content: center;
-      gap: 16px;
-      margin: 32px 0;
+      gap: 8px;
+      margin: 24px 0;
+      flex-wrap: wrap;
     }
 
     .otp-input {
-      width: 64px;
-      height: 72px;
+      width: 48px;
+      height: 56px;
       border: 3px solid var(--border);
-      border-radius: 16px;
+      border-radius: 12px;
       text-align: center;
-      font-size: 1.8rem;
+      font-size: 1.4rem;
       font-weight: 700;
       transition: all 0.3s ease;
       background: white;
       color: var(--dark);
+      touch-action: manipulation;
     }
 
     .otp-input:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.15);
-      transform: scale(1.1);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+      transform: scale(1.05);
     }
 
     .btn {
       background: var(--primary);
       color: white;
       border: none;
-      padding: 18px 36px;
-      border-radius: 16px;
-      font-size: 1.1rem;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.4);
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px -2px rgba(99, 102, 241, 0.4);
+      touch-action: manipulation;
+      width: 100%;
+      margin: 8px 0;
     }
 
     .btn::before {
@@ -301,39 +313,61 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.8s;
+      transition: left 0.6s;
     }
 
+    .btn:active::before,
     .btn:hover::before {
       left: 100%;
     }
 
+    .btn:active,
     .btn:hover {
       background: var(--primary-dark);
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.5);
-    }
-
-    .btn:active {
       transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 16px -2px rgba(99, 102, 241, 0.5);
     }
 
     .btn.secondary {
       background: var(--secondary);
-      box-shadow: 0 8px 16px -4px rgba(236, 72, 153, 0.4);
+      box-shadow: 0 4px 12px -2px rgba(236, 72, 153, 0.4);
     }
 
+    .btn.secondary:active,
     .btn.secondary:hover {
       background: #db2777;
-      box-shadow: 0 15px 30px -5px rgba(236, 72, 153, 0.5);
+      box-shadow: 0 6px 16px -2px rgba(236, 72, 153, 0.5);
+    }
+
+    .btn.back-btn {
+      background: var(--gray);
+      width: auto;
+      display: inline-block;
+      margin-right: 12px;
+    }
+
+    .btn.back-btn:active,
+    .btn.back-btn:hover {
+      background: #475569;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group .btn {
+      flex: 1;
+      min-width: 120px;
     }
 
     .connected-section {
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.08));
       border: 2px solid rgba(16, 185, 129, 0.25);
-      border-radius: 20px;
-      padding: 32px;
-      margin-bottom: 32px;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
       text-align: center;
       backdrop-filter: blur(10px);
     }
@@ -342,19 +376,21 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 12px;
       color: var(--success);
       font-weight: 700;
-      font-size: 1.3rem;
+      font-size: 1rem;
+      flex-wrap: wrap;
     }
 
     .status-dot {
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       background: var(--success);
       border-radius: 50%;
       animation: pulse 2s infinite;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+      flex-shrink: 0;
     }
 
     @keyframes pulse {
@@ -363,59 +399,61 @@
     }
 
     .transfer-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      margin-bottom: 32px;
-      height: calc(100vh - 400px);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 20px;
     }
 
     .transfer-panel {
       background: white;
       border: 2px solid var(--border);
-      border-radius: 20px;
-      padding: 32px;
-      box-shadow: 0 8px 16px -4px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px -2px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
     }
 
     .panel-title {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       color: var(--dark);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
 
     .chat-area {
-      height: 200px;
+      height: 150px;
       border: 2px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 12px;
+      padding: 16px;
       font-family: 'Inter', monospace;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       resize: none;
       background: #f8fafc;
-      margin-bottom: 20px;
-      line-height: 1.6;
+      margin-bottom: 16px;
+      line-height: 1.5;
       flex-grow: 1;
+      -webkit-overflow-scrolling: touch;
     }
 
     .chat-input {
       display: flex;
-      gap: 16px;
+      gap: 8px;
+      align-items: stretch;
     }
 
     .chat-input input {
       flex: 1;
-      padding: 16px 20px;
+      padding: 14px 16px;
       border: 2px solid var(--border);
       border-radius: 12px;
       font-size: 1rem;
       transition: border-color 0.3s;
+      touch-action: manipulation;
     }
 
     .chat-input input:focus {
@@ -424,17 +462,24 @@
       box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
     }
 
+    .chat-input .btn {
+      width: auto;
+      margin: 0;
+      padding: 14px 20px;
+    }
+
     .file-upload {
       border: 3px dashed var(--border);
-      border-radius: 20px;
-      padding: 48px 24px;
+      border-radius: 16px;
+      padding: 32px 16px;
       text-align: center;
-      margin-bottom: 24px;
-      transition: all 0.4s ease;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
       cursor: pointer;
       background: linear-gradient(135deg, #f8fafc, #f1f5f9);
       position: relative;
       overflow: hidden;
+      touch-action: manipulation;
     }
 
     .file-upload::before {
@@ -449,99 +494,122 @@
       transition: transform 0.6s;
     }
 
+    .file-upload:active::before,
     .file-upload:hover::before {
       transform: translateX(100%);
     }
 
+    .file-upload:active,
     .file-upload:hover {
       border-color: var(--primary);
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.12));
       transform: scale(1.02);
-      box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.2);
+      box-shadow: 0 4px 12px -2px rgba(99, 102, 241, 0.2);
     }
 
     .file-upload.drag-over {
       border-color: var(--primary);
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.2));
       transform: scale(1.05);
-      box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 6px 16px -2px rgba(99, 102, 241, 0.3);
     }
 
     .file-icon {
-      font-size: 3.5rem;
+      font-size: 2.5rem;
       color: var(--primary);
-      margin-bottom: 20px;
+      margin-bottom: 12px;
       filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.3));
     }
 
+    .file-upload-text {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .file-upload-desc {
+      color: var(--gray);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
     .file-list {
-      max-height: 300px;
+      max-height: 200px;
       overflow-y: auto;
-      margin: 20px 0;
+      margin: 16px 0;
       border: 2px solid var(--border);
-      border-radius: 16px;
+      border-radius: 12px;
       background: white;
+      -webkit-overflow-scrolling: touch;
     }
 
     .file-item {
       display: flex;
       align-items: center;
-      padding: 16px 20px;
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border);
       transition: background-color 0.3s;
+      gap: 12px;
     }
 
     .file-item:last-child {
       border-bottom: none;
     }
 
+    .file-item:active,
     .file-item:hover {
       background: rgba(99, 102, 241, 0.05);
     }
 
     .file-checkbox {
-      margin-right: 16px;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .file-info {
       flex-grow: 1;
+      min-width: 0;
     }
 
     .file-name {
       font-weight: 600;
       color: var(--dark);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      word-break: break-word;
+      font-size: 0.9rem;
     }
 
     .file-size {
       color: var(--gray);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
 
     .file-remove {
       color: var(--error);
       cursor: pointer;
-      padding: 8px;
-      border-radius: 8px;
+      padding: 6px;
+      border-radius: 6px;
       transition: background-color 0.3s;
+      flex-shrink: 0;
+      touch-action: manipulation;
     }
 
+    .file-remove:active,
     .file-remove:hover {
       background: rgba(239, 68, 68, 0.1);
     }
 
     .progress-container {
-      margin: 24px 0;
+      margin: 16px 0;
     }
 
     .progress-bar {
       width: 100%;
-      height: 12px;
+      height: 8px;
       background: #e2e8f0;
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
@@ -549,10 +617,10 @@
     .progress-fill {
       height: 100%;
       background: var(--gradient);
-      border-radius: 8px;
+      border-radius: 6px;
       transition: width 0.3s ease;
       position: relative;
-      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 2px 6px rgba(99, 102, 241, 0.4);
     }
 
     .progress-fill::after {
@@ -574,14 +642,16 @@
     .progress-text {
       display: flex;
       justify-content: space-between;
-      margin-top: 12px;
-      font-size: 1rem;
+      margin-top: 8px;
+      font-size: 0.9rem;
       color: var(--gray);
       font-weight: 500;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .speed-indicator {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--primary);
       font-weight: 600;
     }
@@ -589,51 +659,62 @@
     .download-section {
       background: white;
       border: 2px solid var(--border);
-      border-radius: 20px;
-      padding: 32px;
-      margin-top: 24px;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 16px;
     }
 
     .download-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     .download-title {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--dark);
+    }
+
+    .download-header-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .select-all-btn {
       background: var(--success);
       color: white;
-      padding: 12px 24px;
+      padding: 8px 16px;
       border: none;
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
+      font-size: 0.9rem;
       transition: all 0.3s ease;
+      touch-action: manipulation;
     }
 
+    .select-all-btn:active,
     .select-all-btn:hover {
       background: #059669;
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
 
     .download-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .download-item {
       background: linear-gradient(135deg, #f8fafc, #f1f5f9);
       border: 2px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
+      border-radius: 12px;
+      padding: 16px;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -650,14 +731,16 @@
       transition: left 0.6s;
     }
 
+    .download-item:active::before,
     .download-item:hover::before {
       left: 100%;
     }
 
+    .download-item:active,
     .download-item:hover {
       border-color: var(--success);
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.3);
     }
 
     .download-item.selected {
@@ -665,82 +748,102 @@
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
     }
 
+    .download-item-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
     .download-checkbox {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 24px;
-      height: 24px;
+      width: 20px;
+      height: 20px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .download-file-icon {
-      font-size: 2.5rem;
-      margin-bottom: 16px;
+      font-size: 2rem;
       color: var(--success);
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .download-file-info {
+      flex: 1;
+      min-width: 0;
     }
 
     .download-file-name {
       font-weight: 700;
       color: var(--dark);
-      margin-bottom: 8px;
+      margin-bottom: 4px;
       word-break: break-word;
+      font-size: 0.9rem;
     }
 
     .download-file-size {
       color: var(--gray);
-      font-size: 0.9rem;
-      margin-bottom: 16px;
+      font-size: 0.8rem;
+      margin-bottom: 12px;
     }
 
     .download-link {
       background: var(--success);
       color: white;
-      padding: 12px 20px;
-      border-radius: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
       text-decoration: none;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: 6px;
       font-weight: 600;
+      font-size: 0.9rem;
       transition: all 0.3s ease;
       width: 100%;
-      justify-content: center;
+      touch-action: manipulation;
     }
 
+    .download-link:active,
     .download-link:hover {
       background: #059669;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.4);
     }
 
     .bulk-download {
       position: fixed;
-      bottom: 32px;
-      right: 32px;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
       background: var(--success);
       color: white;
-      padding: 16px 32px;
+      padding: 16px 24px;
       border: none;
-      border-radius: 50px;
+      border-radius: 12px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 4px 16px -2px rgba(16, 185, 129, 0.4);
       transition: all 0.3s ease;
       z-index: 1000;
       display: none;
+      font-size: 1rem;
+      touch-action: manipulation;
     }
 
+    .bulk-download:active,
     .bulk-download:hover {
       background: #059669;
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px -6px rgba(16, 185, 129, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px -2px rgba(16, 185, 129, 0.5);
     }
 
     .bulk-download.show {
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      gap: 8px;
       animation: slideUp 0.4s ease;
     }
 
@@ -755,21 +858,12 @@
       }
     }
 
-    .back-btn {
-      background: var(--gray);
-      margin-right: 16px;
-    }
-
-    .back-btn:hover {
-      background: #475569;
-    }
-
     .status-message {
-      padding: 20px;
-      border-radius: 16px;
-      margin: 20px 0;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     .status-success {
@@ -790,113 +884,231 @@
       color: var(--primary);
     }
 
-    /* Enhanced Responsiveness */
-    @media (max-width: 1024px) {
-      .container {
-        max-width: 95vw;
-        margin: 10px;
+    /* Desktop Responsive Adjustments */
+    @media (min-width: 768px) {
+      body {
+        padding: 20px;
       }
-      
-      .transfer-section {
-        grid-template-columns: 1fr;
-        height: auto;
-      }
-      
-      .download-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      }
-    }
 
-    @media (max-width: 768px) {
       .container {
-        border-radius: 0;
-        min-height: 100vh;
-        max-width: 100vw;
-        margin: 0;
+        border-radius: 24px;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 1200px;
+        min-height: 80vh;
+        height: auto;
       }
 
       .header {
-        padding: 24px 20px;
+        padding: 32px;
       }
 
       .logo {
-        font-size: 2.2rem;
+        font-size: 2.8rem;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
       }
 
       .main-content {
-        padding: 24px 20px;
-        height: calc(100vh - 150px);
+        padding: 40px;
+        height: auto;
       }
 
       .role-selector {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        max-width: 800px;
+        margin: 0 auto 32px;
       }
 
       .role-card {
-        padding: 32px 24px;
+        padding: 40px 32px;
+        transform: perspective(1000px) rotateX(0deg);
+      }
+
+      .role-card:hover {
+        transform: perspective(1000px) rotateX(5deg) translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+      }
+
+      .role-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+      }
+
+      .role-title {
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+      }
+
+      .role-desc {
+        font-size: 1rem;
       }
 
       .otp-display {
-        font-size: 2.5rem;
-        letter-spacing: 8px;
-        padding: 24px;
+        font-size: 3.5rem;
+        letter-spacing: 12px;
+        padding: 32px 48px;
+        margin: 24px 0;
       }
 
       .otp-inputs {
-        gap: 12px;
+        gap: 16px;
       }
 
       .otp-input {
-        width: 48px;
-        height: 56px;
-        font-size: 1.5rem;
+        width: 64px;
+        height: 72px;
+        font-size: 1.8rem;
+      }
+
+      .btn {
+        width: auto;
+        display: inline-block;
+        margin: 8px 4px;
+        padding: 18px 36px;
+      }
+
+      .btn-group {
+        justify-content: center;
       }
 
       .transfer-section {
-        grid-template-columns: 1fr;
-        gap: 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
         height: auto;
       }
 
       .transfer-panel {
-        padding: 24px;
+        padding: 32px;
+      }
+
+      .panel-title {
+        font-size: 1.4rem;
+        margin-bottom: 24px;
+        gap: 12px;
+      }
+
+      .chat-area {
+        height: 200px;
+        padding: 20px;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+      }
+
+      .chat-input input {
+        padding: 16px 20px;
       }
 
       .file-upload {
-        padding: 32px 16px;
+        padding: 48px 24px;
+        margin-bottom: 24px;
+      }
+
+      .file-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+      }
+
+      .file-upload-text {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+      }
+
+      .file-upload-desc {
+        font-size: 0.95rem;
+      }
+
+      .file-list {
+        max-height: 300px;
+        margin: 20px 0;
+      }
+
+      .file-item {
+        padding: 16px 20px;
+      }
+
+      .file-name {
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+
+      .file-size {
+        font-size: 0.9rem;
+      }
+
+      .progress-text {
+        font-size: 1rem;
+        margin-top: 12px;
+      }
+
+      .speed-indicator {
+        font-size: 0.9rem;
+      }
+
+      .download-section {
+        padding: 32px;
+        margin-top: 24px;
+      }
+
+      .download-header {
+        margin-bottom: 24px;
+      }
+
+      .download-title {
+        font-size: 1.4rem;
       }
 
       .download-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
       }
 
-      .bulk-download {
-        bottom: 20px;
-        right: 20px;
-        left: 20px;
-        border-radius: 16px;
+      .download-item {
+        padding: 24px;
       }
-    }
 
-    @media (max-width: 480px) {
-      .otp-inputs {
+      .download-file-icon {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+      }
+
+      .download-file-name {
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+
+      .download-file-size {
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+      }
+
+      .download-link {
+        font-size: 1rem;
+        padding: 12px 20px;
         gap: 8px;
       }
 
-      .otp-input {
-        width: 42px;
-        height: 50px;
-        font-size: 1.3rem;
+      .bulk-download {
+        position: fixed;
+        bottom: 32px;
+        right: 32px;
+        left: auto;
+        width: auto;
+        border-radius: 50px;
+        padding: 16px 32px;
       }
+    }
 
-      .btn {
-        padding: 14px 24px;
-        font-size: 1rem;
-      }
-
-      .file-upload {
-        padding: 24px 12px;
+    /* Large Desktop */
+    @media (min-width: 1024px) {
+      .download-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       }
     }
 
@@ -935,13 +1147,34 @@
     ::-webkit-scrollbar-thumb:hover {
       background: var(--primary-dark);
     }
+
+    /* Touch-friendly adjustments */
+    @media (pointer: coarse) {
+      .btn {
+        min-height: 48px;
+      }
+      
+      .file-checkbox,
+      .download-checkbox {
+        min-width: 24px;
+        min-height: 24px;
+      }
+      
+      .file-remove {
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
       <div class="logo">🚀 SecureShare Pro</div>
-      <div class="tagline">Ultra-Fast Peer-to-Peer File Transfer • Up to 5GB • Multi-Select</div>
+      <div class="tagline">Ultra-Fast Peer-to-Peer File Transfer • Small File</div>
     </div>
 
     <div class="main-content">
@@ -966,7 +1199,7 @@
         <div class="otp-section">
           <div class="otp-label">Share this secure code with the receiver:</div>
           <div class="otp-display" id="otpCode">------</div>
-          <div style="color: var(--gray); font-size: 1rem; font-weight: 500;">⏱️ Code expires in 10 minutes • 🔒 End-to-end encrypted</div>
+          <div style="color: var(--gray); font-size: 0.9rem; font-weight: 500; text-align: center;">⏱️ Code expires in 10 minutes • 🔒 End-to-end encrypted</div>
         </div>
         <div style="text-align: center;">
           <button class="btn back-btn" onclick="goBack()">← Back</button>
@@ -977,7 +1210,7 @@
       <!-- OTP Input -->
       <div id="joinSection" class="section">
         <div class="otp-input-section">
-          <div class="otp-label">Enter the 6-digit secure code:</div>
+          <div class="otp-label" style="text-align: center; margin-bottom: 16px; font-weight: 600;">Enter the 6-digit secure code:</div>
           <div class="otp-inputs">
             <input type="text" maxlength="1" class="otp-input" id="otp0" oninput="nextInput(0)">
             <input type="text" maxlength="1" class="otp-input" id="otp1" oninput="nextInput(1)">
@@ -987,8 +1220,10 @@
             <input type="text" maxlength="1" class="otp-input" id="otp5" oninput="nextInput(5)">
           </div>
           <div style="text-align: center;">
-            <button class="btn back-btn" onclick="goBack()">← Back</button>
-            <button class="btn secondary" onclick="submitOtp()">🔗 Connect Securely</button>
+            <div class="btn-group">
+              <button class="btn back-btn" onclick="goBack()">← Back</button>
+              <button class="btn secondary" onclick="submitOtp()">🔗 Connect Securely</button>
+            </div>
           </div>
           <div id="joinStatus"></div>
         </div>
@@ -1021,8 +1256,8 @@
                  ondrop="handleDrop(event)" ondragover="handleDragOver(event)" 
                  ondragleave="handleDragLeave(event)">
               <div class="file-icon">📄</div>
-              <div style="font-weight: 700; margin-bottom: 8px; font-size: 1.1rem;">Click to select or drag multiple files here</div>
-              <div style="color: var(--gray); font-size: 0.95rem; line-height: 1.4;">
+              <div class="file-upload-text">Click to select or drag multiple files here</div>
+              <div class="file-upload-desc">
                 ✨ Multi-select supported<br>
                 🚀 Ultra-fast transfer up to 5GB per file<br>
                 📱 Any file type supported
@@ -1032,11 +1267,11 @@
             
             <div id="fileList" class="file-list" style="display: none;"></div>
             
-            <div style="display: flex; gap: 12px; margin: 16px 0;">
-              <button class="btn" onclick="selectAllFiles()" id="selectAllBtn" style="flex: 1;" disabled>
+            <div class="btn-group">
+              <button class="btn" onclick="selectAllFiles()" id="selectAllBtn" disabled>
                 ✅ Select All
               </button>
-              <button class="btn secondary" onclick="clearFiles()" id="clearFilesBtn" style="flex: 1;" disabled>
+              <button class="btn secondary" onclick="clearFiles()" id="clearFilesBtn" disabled>
                 🗑️ Clear All
               </button>
             </div>
@@ -1064,9 +1299,14 @@
         <div id="downloadSection" class="download-section" style="display: none;">
           <div class="download-header">
             <div class="download-title">📥 Received Files</div>
-            <button class="select-all-btn" onclick="selectAllDownloads()">
-              ✅ Select All Downloads
-            </button>
+            <div class="download-header-actions">
+              <button class="select-all-btn" onclick="selectAllDownloads()">
+                ✅ Select All Downloads
+              </button>
+              <button class="btn secondary" onclick="clearAll()" id="clearAllBtn" style="padding: 8px 16px; font-size: 0.9rem;">
+                🗑️ Clear All
+              </button>
+            </div>
           </div>
           <div id="downloadGrid" class="download-grid"></div>
         </div>
@@ -1085,6 +1325,7 @@
   </button>
 
   <script>
+    // Enhanced P2P file transfer with mobile optimizations
     let ws, pc, dataChannel;
     let role;
     let receivedChunks = [];
@@ -1095,16 +1336,18 @@
     let totalBytesTransferred = 0;
     let receivedFiles = [];
     let selectedDownloads = new Set();
-    
-    // Enhanced chunk size for better performance
-    const CHUNK_SIZE = 64 * 1024; // 64KB chunks for faster transfer
-    const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024; // 5GB limit
+
+    // Mobile-optimized tunables
+    const CHUNK_SIZE = 32 * 1024; // Reduced for mobile
+    const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024;
+    const MAX_FILE_COUNT = 50; // Reduced for mobile memory
+    const MAX_SCTP_BUFFERED = 8 * 1024 * 1024; // Reduced for mobile
+    const BUFFERED_LOW_THRESHOLD = 4 * 1024 * 1024;
 
     function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-      });
-      document.getElementById(sectionId).classList.add('active');
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      const el = document.getElementById(sectionId);
+      if (el) el.classList.add('active');
     }
 
     function goBack() {
@@ -1115,79 +1358,66 @@
 
     function resetState() {
       selectedFiles = [];
-      receivedFiles = [];
       selectedDownloads.clear();
       updateFileList();
       updateDownloadSection();
       updateBulkDownloadButton();
+      hideProgress();
     }
 
     function beCreator() {
-      role = "creator";
-      ws = new WebSocket("wss://filetransferp2p.onrender.com/ws/creator");
+      role = 'creator';
+      ws = new WebSocket('wss://filetransferp2p.onrender.com/ws/creator');
       setupWs();
       showSection('otpSection');
     }
 
     function beJoiner() {
-      role = "joiner";
+      role = 'joiner';
       showSection('joinSection');
-      setTimeout(() => document.getElementById('otp0').focus(), 100);
+      setTimeout(() => document.getElementById('otp0')?.focus(), 100);
     }
 
     function submitOtp() {
-      const otp = Array.from({length: 6}, (_, i) => 
-        document.getElementById(`otp${i}`).value).join('');
-      
+      const otp = Array.from({ length: 6 }, (_, i) => document.getElementById(`otp${i}`).value).join('');
       if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
         showStatus('⚠️ Enter a valid 6-digit code', 'error', 'joinStatus');
         return;
       }
-
-      ws = new WebSocket("wss://filetransferp2p.onrender.com/ws/joiner");
-      ws.onopen = () => {
-        ws.send(JSON.stringify({ otp: otp }));
-      };
+      ws = new WebSocket('wss://filetransferp2p.onrender.com/ws/joiner');
+      ws.onopen = () => ws.send(JSON.stringify({ otp }));
       setupWs();
       showStatus('🔄 Connecting securely...', 'info', 'joinStatus');
     }
 
     function setupWs() {
       ws.onmessage = async (event) => {
-        const msg = JSON.parse(event.data);
-
-        if (msg.type === "otp") {
-          document.getElementById("otpCode").innerText = msg.otp;
-        } 
-        else if (msg.type === "connected") {
-          startWebRTC();
-          showSection('connectedSection');
-          showStatus('✅ Connected! Ultra-fast transfer mode active.', 'success', 'joinStatus');
-        } 
-        else if (msg.type === "offer") {
-          await pc.setRemoteDescription(msg);
-          const answer = await pc.createAnswer();
-          await pc.setLocalDescription(answer);
-          ws.send(JSON.stringify(answer));
-        } 
-        else if (msg.type === "answer") {
-          await pc.setRemoteDescription(msg);
-        } 
-        else if (msg.type === "candidate") {
-          await pc.addIceCandidate(msg.candidate);
-        }
-        else if (msg.type === "error") {
-          showStatus(`❌ ${msg.message}`, 'error', 'joinStatus');
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === 'otp') {
+            document.getElementById('otpCode').innerText = msg.otp;
+          } else if (msg.type === 'connected') {
+            startWebRTC();
+            showSection('connectedSection');
+            showStatus('✅ Connected! Ultra-fast transfer mode active.', 'success', 'joinStatus');
+          } else if (msg.type === 'offer') {
+            await pc.setRemoteDescription(msg);
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            ws.send(JSON.stringify(answer));
+          } else if (msg.type === 'answer') {
+            await pc.setRemoteDescription(msg);
+          } else if (msg.type === 'candidate') {
+            await pc.addIceCandidate(msg.candidate);
+          } else if (msg.type === 'error') {
+            showStatus(`❌ ${msg.message}`, 'error', 'joinStatus');
+          }
+        } catch (err) {
+          console.error('ws message parse error', err);
         }
       };
-
-      ws.onclose = () => {
-        showStatus('🔌 Connection lost', 'error', 'joinStatus');
-      };
-
-      ws.onerror = () => {
-        showStatus('❌ Connection failed. Please try again.', 'error', 'joinStatus');
-      };
+      ws.onclose = () => showStatus('🔌 Connection lost', 'error', 'joinStatus');
+      ws.onerror = () => showStatus('❌ Connection failed. Please try again.', 'error', 'joinStatus');
     }
 
     function startWebRTC() {
@@ -1200,8 +1430,8 @@
       });
 
       pc.onicecandidate = (event) => {
-        if (event.candidate) {
-          ws.send(JSON.stringify({ type: "candidate", candidate: event.candidate }));
+        if (event.candidate && ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'candidate', candidate: event.candidate }));
         }
       };
 
@@ -1210,124 +1440,148 @@
         setupDataChannel(dataChannel);
       };
 
-      if (role === "creator") {
-        dataChannel = pc.createDataChannel("data", { 
-          ordered: false, // Allow out-of-order delivery for speed
-          maxPacketLifeTime: 3000 
+      if (role === 'creator') {
+        dataChannel = pc.createDataChannel('data', {
+          ordered: true,
         });
         setupDataChannel(dataChannel);
         pc.createOffer().then(offer => {
           pc.setLocalDescription(offer);
-          ws.send(JSON.stringify(offer));
+          if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(offer));
         });
       }
     }
 
     function setupDataChannel(channel) {
+      channel.binaryType = 'arraybuffer';
+      try {
+        channel.bufferedAmountLowThreshold = BUFFERED_LOW_THRESHOLD;
+      } catch (e) {
+        // Ignore if not supported
+      }
+
       channel.onopen = () => {
-        console.log("Data channel open");
-        addChatMessage("System", "🔒 Ultra-fast secure connection established!");
+        console.log('Data channel open');
+        addChatMessage('System', '🔒 Ultra-fast secure connection established!');
+        updateFileList();
       };
-      
-      channel.onmessage = (e) => handleDataMessage(e.data);
-      
+
+      channel.onmessage = async (e) => {
+        await handleDataMessage(e.data);
+      };
+
       channel.onerror = (error) => {
-        console.error("Data channel error:", error);
-        addChatMessage("System", "❌ Connection error occurred");
+        console.error('Data channel error:', error);
+        addChatMessage('System', '❌ Connection error occurred');
       };
     }
 
-    function handleDataMessage(data) {
-      if (typeof data === "string") {
+    async function handleDataMessage(data) {
+      if (typeof data === 'string') {
         try {
           const obj = JSON.parse(data);
-          if (obj.type === "file-meta") {
+          if (obj.type === 'file-meta') {
             fileMetadata = obj;
             receivedChunks = [];
             transferStartTime = Date.now();
             totalBytesTransferred = 0;
             showProgress(0, `Receiving ${obj.name}`, 0);
-            addChatMessage("System", `📥 Receiving: ${obj.name} (${formatFileSize(obj.size)})`);
-          } else if (obj.type === "file-complete") {
+            addChatMessage('System', `📥 Receiving: ${obj.name} (${formatFileSize(obj.size)})`);
+          } else if (obj.type === 'file-complete') {
             completeFileReceive();
-          } else if (obj.type === "chat") {
-            addChatMessage("Peer", obj.msg);
+          } else if (obj.type === 'chat') {
+            addChatMessage('Peer', obj.msg);
           }
-        } catch {
-          addChatMessage("Peer", data);
+        } catch (err) {
+          addChatMessage('Peer', data);
         }
       } else {
         if (fileMetadata) {
           receivedChunks.push(data);
-          totalBytesTransferred += data.byteLength;
-          
+          const chunkLength = (data instanceof ArrayBuffer) ? data.byteLength : (data.size || 0);
+          totalBytesTransferred += chunkLength;
+
           const progress = (totalBytesTransferred / fileMetadata.size) * 100;
-          const elapsed = (Date.now() - transferStartTime) / 1000;
+          const elapsed = Math.max((Date.now() - transferStartTime) / 1000, 0.001);
           const speed = totalBytesTransferred / elapsed;
-          
           showProgress(Math.min(progress, 100), `Receiving ${fileMetadata.name}`, speed);
+        } else {
+          console.warn('Received binary data but no file metadata present');
         }
       }
     }
 
     function completeFileReceive() {
-      const received = new Blob(receivedChunks);
-      const url = URL.createObjectURL(received);
-      
-      const fileInfo = {
-        name: fileMetadata.name,
-        size: fileMetadata.size,
-        url: url,
-        id: Date.now() + Math.random()
-      };
-      
-      receivedFiles.push(fileInfo);
-      updateDownloadSection();
-      
-      addChatMessage("System", `✅ File received: ${fileMetadata.name}`);
-      hideProgress();
-      receivedChunks = [];
-      fileMetadata = null;
-      totalBytesTransferred = 0;
+      try {
+        const received = new Blob(receivedChunks);
+        const url = URL.createObjectURL(received);
+        const fileInfo = {
+          name: fileMetadata.name,
+          size: fileMetadata.size,
+          url: url,
+          id: `${Date.now()}-${Math.random().toString(36).slice(2,9)}`
+        };
+        receivedFiles.push(fileInfo);
+        updateDownloadSection();
+        addChatMessage('System', `✅ File received: ${fileMetadata.name}`);
+      } catch (err) {
+        console.error('Error assembling received file', err);
+        addChatMessage('System', '❌ Error assembling received file');
+      } finally {
+        hideProgress();
+        receivedChunks = [];
+        fileMetadata = null;
+        totalBytesTransferred = 0;
+      }
     }
 
     function updateDownloadSection() {
       const downloadSection = document.getElementById('downloadSection');
       const downloadGrid = document.getElementById('downloadGrid');
-      
+      if (!downloadSection || !downloadGrid) return;
+
       if (receivedFiles.length === 0) {
         downloadSection.style.display = 'none';
         return;
       }
-      
+
       downloadSection.style.display = 'block';
       downloadGrid.innerHTML = '';
-      
+
       receivedFiles.forEach(file => {
         const fileItem = document.createElement('div');
         fileItem.className = `download-item ${selectedDownloads.has(file.id) ? 'selected' : ''}`;
+
         fileItem.innerHTML = `
-          <input type="checkbox" class="download-checkbox" ${selectedDownloads.has(file.id) ? 'checked' : ''} 
-                 onchange="toggleDownloadSelection('${file.id}')">
-          <div class="download-file-icon">${getFileIcon(file.name)}</div>
-          <div class="download-file-name">${file.name}</div>
-          <div class="download-file-size">${formatFileSize(file.size)}</div>
-          <a href="${file.url}" download="${file.name}" class="download-link">
-            📥 Download
-          </a>
+          <div class="download-item-header">
+            <div style="display: flex; align-items: center;">
+              <div class="download-file-icon">${getFileIcon(file.name)}</div>
+              <div class="download-file-info">
+                <div class="download-file-name">${file.name}</div>
+                <div class="download-file-size">${formatFileSize(file.size)}</div>
+              </div>
+            </div>
+            <input type="checkbox" class="download-checkbox" data-file-id="${file.id}" ${selectedDownloads.has(file.id) ? 'checked' : ''}>
+          </div>
+          <a href="${file.url}" download="${file.name}" class="download-link">📥 Download</a>
         `;
+
         downloadGrid.appendChild(fileItem);
       });
-      
+
+      downloadGrid.querySelectorAll('.download-checkbox').forEach(cb => {
+        cb.removeEventListener('change', onDownloadCheckboxChange);
+        cb.addEventListener('change', onDownloadCheckboxChange);
+      });
+
       updateBulkDownloadButton();
     }
 
-    function toggleDownloadSelection(fileId) {
-      if (selectedDownloads.has(fileId)) {
-        selectedDownloads.delete(fileId);
-      } else {
-        selectedDownloads.add(fileId);
-      }
+    function onDownloadCheckboxChange(e) {
+      const id = e.target.getAttribute('data-file-id');
+      if (!id) return;
+      if (e.target.checked) selectedDownloads.add(id);
+      else selectedDownloads.delete(id);
       updateDownloadSection();
     }
 
@@ -1339,10 +1593,10 @@
     function updateBulkDownloadButton() {
       const bulkBtn = document.getElementById('bulkDownloadBtn');
       const bulkText = document.getElementById('bulkDownloadText');
-      
+      if (!bulkBtn) return;
       if (selectedDownloads.size > 0) {
         bulkBtn.classList.add('show');
-        bulkText.textContent = `Download Selected (${selectedDownloads.size})`;
+        if (bulkText) bulkText.textContent = `Download Selected (${selectedDownloads.size})`;
       } else {
         bulkBtn.classList.remove('show');
       }
@@ -1355,56 +1609,77 @@
           const link = document.createElement('a');
           link.href = file.url;
           link.download = file.name;
+          document.body.appendChild(link);
           link.click();
+          link.remove();
         });
+    }
+
+    function clearAll() {
+      selectedFiles = [];
+      selectedDownloads.clear();
+      receivedFiles.forEach(f => { try { URL.revokeObjectURL(f.url); } catch (e) {} });
+      receivedFiles = [];
+      updateFileList();
+      updateDownloadSection();
+      updateBulkDownloadButton();
+      addChatMessage('System', '🧹 Cleared all files. You can now select new files.');
     }
 
     function getFileIcon(filename) {
       const ext = filename.split('.').pop().toLowerCase();
       const icons = {
-        'pdf': '📄', 'doc': '📝', 'docx': '📝', 'txt': '📝',
-        'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️', 'svg': '🖼️',
-        'mp4': '🎥', 'avi': '🎥', 'mov': '🎥', 'wmv': '🎥',
-        'mp3': '🎵', 'wav': '🎵', 'flac': '🎵', 'm4a': '🎵',
-        'zip': '🗜️', 'rar': '🗜️', '7z': '🗜️',
-        'exe': '⚙️', 'msi': '⚙️',
-        'html': '🌐', 'css': '🎨', 'js': '⚡', 'json': '📋'
+        pdf: '📄', doc: '📝', docx: '📝', txt: '📝',
+        jpg: '🖼️', jpeg: '🖼️', png: '🖼️', gif: '🖼️', svg: '🖼️',
+        mp4: '🎥', avi: '🎥', mov: '🎥', wmv: '🎥',
+        mp3: '🎵', wav: '🎵', flac: '🎵', m4a: '🎵',
+        zip: '🗜️', rar: '🗜️', '7z': '🗜️',
+        exe: '⚙️', msi: '⚙️',
+        html: '🌐', css: '🎨', js: '⚡', json: '📋'
       };
       return icons[ext] || '📄';
     }
 
     function addChatMessage(sender, message) {
-      const chat = document.getElementById("chat");
-      const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      const chat = document.getElementById('chat');
+      if (!chat) return;
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       chat.value += `[${timestamp}] ${sender}: ${message}\n`;
       chat.scrollTop = chat.scrollHeight;
     }
 
     function sendMsg() {
-      const msgBox = document.getElementById("msgBox");
-      const msg = msgBox.value.trim();
-      if (!msg || !dataChannel) return;
-
-      dataChannel.send(JSON.stringify({ type: "chat", msg }));
-      addChatMessage("You", msg);
-      msgBox.value = "";
+      const msgBox = document.getElementById('msgBox');
+      const msg = msgBox?.value?.trim();
+      if (!msg || !dataChannel || dataChannel.readyState !== 'open') return;
+      dataChannel.send(JSON.stringify({ type: 'chat', msg }));
+      addChatMessage('You', msg);
+      if (msgBox) msgBox.value = '';
     }
 
     function handleEnter(event) {
-      if (event.key === 'Enter') {
-        sendMsg();
-      }
+      if (event.key === 'Enter') sendMsg();
     }
 
     function handleFileSelect() {
       const fileInput = document.getElementById('fileInput');
-      Array.from(fileInput.files).forEach(file => {
+      if (!fileInput) return;
+      const newFiles = Array.from(fileInput.files || []);
+
+      const allowed = Math.max(0, MAX_FILE_COUNT - selectedFiles.length);
+      if (newFiles.length > allowed) {
+        addChatMessage('System', `⚠️ You can add only ${allowed} more files (limit ${MAX_FILE_COUNT}).`);
+      }
+
+      const filesToAdd = newFiles.slice(0, allowed);
+      filesToAdd.forEach(file => {
         if (file.size > MAX_FILE_SIZE) {
-          addChatMessage("System", `❌ File too large: ${file.name} (max 5GB)`);
+          addChatMessage('System', `❌ File too large: ${file.name} (max ${formatFileSize(MAX_FILE_SIZE)})`);
           return;
         }
-        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
-          selectedFiles.push(file);
+        const exists = selectedFiles.some(f => f.file.name === file.name && f.file.size === file.size);
+        if (!exists) {
+          selectedFiles.push({ file, selected: true, id: `${Date.now()}-${Math.random().toString(36).slice(2,9)}` });
         }
       });
       updateFileList();
@@ -1413,77 +1688,92 @@
     function handleDrop(event) {
       event.preventDefault();
       const fileUpload = event.currentTarget;
-      fileUpload.classList.remove('drag-over');
-      
-      Array.from(event.dataTransfer.files).forEach(file => {
+      fileUpload?.classList?.remove('drag-over');
+      const newFiles = Array.from(event.dataTransfer.files || []);
+
+      const allowed = Math.max(0, MAX_FILE_COUNT - selectedFiles.length);
+      if (newFiles.length > allowed) addChatMessage('System', `⚠️ You can add only ${allowed} more files (limit ${MAX_FILE_COUNT}).`);
+
+      newFiles.slice(0, allowed).forEach(file => {
         if (file.size > MAX_FILE_SIZE) {
-          addChatMessage("System", `❌ File too large: ${file.name} (max 5GB)`);
+          addChatMessage('System', `❌ File too large: ${file.name} (max ${formatFileSize(MAX_FILE_SIZE)})`);
           return;
         }
-        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
-          selectedFiles.push(file);
-        }
+        const exists = selectedFiles.some(f => f.file.name === file.name && f.file.size === file.size);
+        if (!exists) selectedFiles.push({ file, selected: true, id: `${Date.now()}-${Math.random().toString(36).slice(2,9)}` });
       });
       updateFileList();
     }
 
-    function handleDragOver(event) {
-      event.preventDefault();
-      event.currentTarget.classList.add('drag-over');
-    }
-
-    function handleDragLeave(event) {
-      event.preventDefault();
-      event.currentTarget.classList.remove('drag-over');
-    }
+    function handleDragOver(event) { event.preventDefault(); event.currentTarget?.classList?.add('drag-over'); }
+    function handleDragLeave(event) { event.preventDefault(); event.currentTarget?.classList?.remove('drag-over'); }
 
     function updateFileList() {
       const fileList = document.getElementById('fileList');
       const sendBtn = document.getElementById('sendFileBtn');
       const selectAllBtn = document.getElementById('selectAllBtn');
       const clearBtn = document.getElementById('clearFilesBtn');
-      
+      const clearAllBtn = document.getElementById('clearAllBtn');
+      if (!fileList) return;
+
       if (selectedFiles.length === 0) {
         fileList.style.display = 'none';
-        sendBtn.disabled = true;
-        sendBtn.innerHTML = '📤 Send Selected Files';
-        selectAllBtn.disabled = true;
-        clearBtn.disabled = true;
+        if (sendBtn) { sendBtn.disabled = true; sendBtn.innerHTML = '📤 Send Selected Files'; }
+        if (selectAllBtn) selectAllBtn.disabled = true;
+        if (clearBtn) clearBtn.disabled = true;
         return;
       }
-      
+
       fileList.style.display = 'block';
-      selectAllBtn.disabled = false;
-      clearBtn.disabled = false;
-      
+      if (selectAllBtn) selectAllBtn.disabled = false;
+      if (clearBtn) clearBtn.disabled = false;
+      if (clearAllBtn) clearAllBtn.disabled = false;
+
       fileList.innerHTML = '';
-      selectedFiles.forEach((file, index) => {
+      selectedFiles.forEach((entry, index) => {
+        const file = entry.file;
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
-          <input type="checkbox" class="file-checkbox" ${file.selected ? 'checked' : ''} 
-                 onchange="toggleFileSelection(${index})">
+          <input type="checkbox" class="file-checkbox" data-file-idx="${index}" ${entry.selected ? 'checked' : ''}>
           <div class="file-info">
             <div class="file-name">${getFileIcon(file.name)} ${file.name}</div>
             <div class="file-size">${formatFileSize(file.size)}</div>
           </div>
-          <div class="file-remove" onclick="removeFile(${index})">🗑️</div>
+          <div class="file-remove" data-remove-idx="${index}">🗑️</div>
         `;
         fileList.appendChild(fileItem);
       });
-      
+
+      fileList.querySelectorAll('.file-checkbox').forEach(cb => {
+        cb.removeEventListener('change', onFileCheckboxChange);
+        cb.addEventListener('change', onFileCheckboxChange);
+      });
+      fileList.querySelectorAll('.file-remove').forEach(btn => {
+        btn.removeEventListener('click', onFileRemoveClick);
+        btn.addEventListener('click', onFileRemoveClick);
+      });
+
       const selectedCount = selectedFiles.filter(f => f.selected).length;
-      const totalSize = selectedFiles.filter(f => f.selected).reduce((sum, f) => sum + f.size, 0);
-      
-      sendBtn.disabled = selectedCount === 0;
-      sendBtn.innerHTML = selectedCount > 0 
-        ? `📤 Send ${selectedCount} Files (${formatFileSize(totalSize)})` 
-        : '📤 Send Selected Files';
+      const totalSize = selectedFiles.filter(f => f.selected).reduce((s, f) => s + f.file.size, 0);
+      if (sendBtn) {
+        sendBtn.disabled = selectedCount === 0 || !dataChannel || dataChannel.readyState !== 'open' || isTransferring;
+        sendBtn.innerHTML = selectedCount > 0 ? `📤 Send ${selectedCount} Files (${formatFileSize(totalSize)})` : '📤 Send Selected Files';
+      }
     }
 
-    function toggleFileSelection(index) {
-      selectedFiles[index].selected = !selectedFiles[index].selected;
+    function onFileCheckboxChange(e) {
+      const idx = parseInt(e.target.getAttribute('data-file-idx'), 10);
+      if (Number.isFinite(idx) && selectedFiles[idx]) selectedFiles[idx].selected = e.target.checked;
       updateFileList();
+    }
+
+    function onFileRemoveClick(e) {
+      const idx = parseInt(e.target.getAttribute('data-remove-idx'), 10);
+      if (Number.isFinite(idx)) {
+        selectedFiles.splice(idx, 1);
+        updateFileList();
+      }
     }
 
     function selectAllFiles() {
@@ -1496,81 +1786,103 @@
       updateFileList();
     }
 
-    function removeFile(index) {
-      selectedFiles.splice(index, 1);
-      updateFileList();
-    }
-
-    function sendFiles() {
+    async function sendFiles() {
       const filesToSend = selectedFiles.filter(f => f.selected);
-      if (filesToSend.length === 0 || !dataChannel || isTransferring) return;
-      
+      if (filesToSend.length === 0 || !dataChannel || dataChannel.readyState !== 'open' || isTransferring) return;
       isTransferring = true;
       document.getElementById('sendFileBtn').disabled = true;
-      
-      sendFilesSequentially(filesToSend, 0);
-    }
-
-    function sendFilesSequentially(files, index) {
-      if (index >= files.length) {
-        addChatMessage("System", `✅ All files sent successfully! (${files.length} files)`);
+      try {
+        for (let i = 0; i < filesToSend.length; i++) {
+          await sendSingleFile(filesToSend[i].file);
+          await sleep(150);
+        }
+        addChatMessage('System', `✅ All files sent successfully! (${filesToSend.length} files)`);
+        selectedFiles = selectedFiles.filter(f => !f.selected);
+        updateFileList();
+      } catch (err) {
+        console.error('Error while sending files', err);
+        addChatMessage('System', '❌ Error while sending files');
+      } finally {
         isTransferring = false;
         document.getElementById('sendFileBtn').disabled = false;
         hideProgress();
-        // Clear sent files
-        selectedFiles = selectedFiles.filter(f => !f.selected);
-        updateFileList();
-        return;
       }
-      
-      const file = files[index];
-      sendSingleFile(file, () => {
-        setTimeout(() => sendFilesSequentially(files, index + 1), 500);
-      });
     }
 
-    function sendSingleFile(file, onComplete) {
-      const metadata = {
-        type: "file-meta",
-        name: file.name,
-        size: file.size
-      };
-      
+    async function sendSingleFile(file) {
+      if (!dataChannel || dataChannel.readyState !== 'open') throw new Error('DataChannel not open');
+      const metadata = { type: 'file-meta', name: file.name, size: file.size };
       dataChannel.send(JSON.stringify(metadata));
-      addChatMessage("You", `📤 Sending: ${file.name} (${formatFileSize(file.size)})`);
-      
-      let offset = 0;
-      const reader = new FileReader();
+      addChatMessage('You', `📤 Sending: ${file.name} (${formatFileSize(file.size)})`);
+
       transferStartTime = Date.now();
       totalBytesTransferred = 0;
-      
-      reader.onload = e => {
-        dataChannel.send(e.target.result);
-        offset += e.target.result.byteLength;
-        totalBytesTransferred += e.target.result.byteLength;
-        
-        const progress = (offset / file.size) * 100;
-        const elapsed = (Date.now() - transferStartTime) / 1000;
-        const speed = totalBytesTransferred / elapsed;
-        
-        showProgress(progress, `Sending ${file.name}`, speed);
 
-        if (offset < file.size) {
-          readSlice(offset);
-        } else {
-          dataChannel.send(JSON.stringify({ type: "file-complete" }));
-          addChatMessage("System", `✅ Sent: ${file.name}`);
-          onComplete();
-        }
-      };
-
-      function readSlice(o) {
-        const slice = file.slice(o, o + CHUNK_SIZE);
-        reader.readAsArrayBuffer(slice);
-      }
-      
-      readSlice(0);
+      let offset = 0;
       showProgress(0, `Sending ${file.name}`, 0);
+
+      while (offset < file.size) {
+        const chunkEnd = Math.min(offset + CHUNK_SIZE, file.size);
+        const chunk = await file.slice(offset, chunkEnd).arrayBuffer();
+
+        await waitForBufferBelow(MAX_SCTP_BUFFERED);
+
+        try {
+          dataChannel.send(chunk);
+        } catch (err) {
+          console.error('send error', err);
+          throw err;
+        }
+
+        offset = chunkEnd;
+        totalBytesTransferred += chunk.byteLength;
+
+        const progress = (offset / file.size) * 100;
+        const elapsed = Math.max((Date.now() - transferStartTime) / 1000, 0.001);
+        const speed = totalBytesTransferred / elapsed;
+        showProgress(progress, `Sending ${file.name}`, speed);
+      }
+
+      dataChannel.send(JSON.stringify({ type: 'file-complete' }));
+      addChatMessage('System', `✅ Sent: ${file.name}`);
+    }
+
+    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    function waitForBufferBelow(threshold) {
+      return new Promise((resolve) => {
+        if (!dataChannel) return resolve();
+        if (dataChannel.bufferedAmount <= threshold) return resolve();
+
+        let resolved = false;
+        const onLow = () => {
+          if (resolved) return;
+          if (dataChannel.bufferedAmount <= threshold) {
+            resolved = true;
+            cleanup();
+            resolve();
+          }
+        };
+        const cleanup = () => {
+          try { dataChannel.removeEventListener('bufferedamountlow', onLow); } catch (e) {}
+          if (pollId) clearInterval(pollId);
+        };
+
+        try {
+          dataChannel.addEventListener('bufferedamountlow', onLow);
+        } catch (e) {
+          // ignore
+        }
+
+        const pollId = setInterval(() => {
+          if (!dataChannel) { clearInterval(pollId); resolve(); return; }
+          if (dataChannel.bufferedAmount <= threshold) {
+            resolved = true;
+            cleanup();
+            resolve();
+          }
+        }, 100);
+      });
     }
 
     function showProgress(percent, text, speed = 0) {
@@ -1579,28 +1891,23 @@
       const progressText = document.getElementById('progressText');
       const progressPercent = document.getElementById('progressPercent');
       const transferSpeed = document.getElementById('transferSpeed');
-      
+      if (!container) return;
       container.style.display = 'block';
-      fill.style.width = percent + '%';
-      progressText.textContent = text;
-      progressPercent.textContent = Math.round(percent) + '%';
-      
-      if (speed > 0) {
-        transferSpeed.textContent = ` • ${formatSpeed(speed)}`;
-      } else {
-        transferSpeed.textContent = '';
-      }
+      if (fill) fill.style.width = percent + '%';
+      if (progressText) progressText.textContent = text;
+      if (progressPercent) progressPercent.textContent = Math.round(percent) + '%';
+      if (transferSpeed) transferSpeed.textContent = speed > 0 ? ` • ${formatSpeed(speed)}` : '';
     }
 
     function hideProgress() {
       const container = document.getElementById('progressContainer');
-      container.style.display = 'none';
+      if (container) container.style.display = 'none';
     }
 
     function formatFileSize(bytes) {
       if (bytes === 0) return '0 Bytes';
       const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
@@ -1615,90 +1922,140 @@
 
     function showStatus(message, type, elementId) {
       const element = document.getElementById(elementId);
-      if (element) {
-        element.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
-      }
+      if (!element) return;
+      element.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
     }
 
     function nextInput(index) {
       const current = document.getElementById(`otp${index}`);
-      if (current.value.length === 1 && index < 5) {
-        document.getElementById(`otp${index + 1}`).focus();
-      }
-      
-      const allFilled = Array.from({length: 6}, (_, i) => 
-        document.getElementById(`otp${i}`).value).every(val => val.length === 1);
-      
-      if (allFilled) {
-        setTimeout(submitOtp, 500);
-      }
+      if (current && current.value.length === 1 && index < 5) document.getElementById(`otp${index + 1}`)?.focus();
+      const allFilled = Array.from({ length: 6 }, (_, i) => document.getElementById(`otp${i}`)?.value).every(val => val && val.length === 1);
+      if (allFilled) setTimeout(submitOtp, 500);
     }
 
     function disconnect() {
-      if (dataChannel) dataChannel.close();
-      if (pc) pc.close();
-      if (ws) ws.close();
-      
+      if (dataChannel) try { dataChannel.close(); } catch (e) {}
+      if (pc) try { pc.close(); } catch (e) {}
+      if (ws) try { ws.close(); } catch (e) {}
       resetState();
-      document.getElementById('chat').value = '';
-      document.getElementById('msgBox').value = '';
+      const chatEl = document.getElementById('chat'); if (chatEl) chatEl.value = '';
+      const msgBox = document.getElementById('msgBox'); if (msgBox) msgBox.value = '';
       hideProgress();
-      
       showSection('roleSelect');
     }
 
-    // Enhanced OTP input handling
+    // Enhanced mobile event handling
     document.addEventListener('DOMContentLoaded', function() {
+      // Enhanced OTP input handling
       for (let i = 0; i < 6; i++) {
         const input = document.getElementById(`otp${i}`);
-        if (input) {
-          input.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace' && this.value === '' && i > 0) {
-              document.getElementById(`otp${i-1}`).focus();
-            }
-          });
-          
-          input.addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            if (this.value.length > 1) {
-              this.value = this.value.slice(0, 1);
-            }
-          });
-          
-          input.addEventListener('paste', function(e) {
-            e.preventDefault();
-            const paste = (e.clipboardData || window.clipboardData).getData('text');
-            const digits = paste.replace(/[^0-9]/g, '').slice(0, 6);
-            
-            for (let j = 0; j < digits.length && (i + j) < 6; j++) {
-              document.getElementById(`otp${i + j}`).value = digits[j];
-            }
-            
-            if (digits.length === 6) {
-              setTimeout(submitOtp, 300);
-            }
-          });
-        }
+        if (!input) continue;
+        
+        // Prevent zoom on iOS
+        input.addEventListener('focus', function() {
+          this.style.fontSize = '16px';
+        });
+        
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && this.value === '' && i > 0) {
+            document.getElementById(`otp${i - 1}`)?.focus();
+          }
+        });
+        
+        input.addEventListener('input', function() {
+          this.value = this.value.replace(/[^0-9]/g, '');
+          if (this.value.length > 1) this.value = this.value.slice(0, 1);
+        });
+        
+        input.addEventListener('paste', function(e) {
+          e.preventDefault();
+          const paste = (e.clipboardData || window.clipboardData).getData('text');
+          const digits = paste.replace(/[^0-9]/g, '').slice(0, 6);
+          for (let j = 0; j < digits.length && (i + j) < 6; j++) {
+            document.getElementById(`otp${i + j}`).value = digits[j];
+          }
+          if (digits.length === 6) setTimeout(submitOtp, 300);
+        });
       }
-      
-      // Initialize file selection states
+
+      // Prevent double-tap zoom on buttons
+      document.querySelectorAll('.btn, .role-card').forEach(el => {
+        el.addEventListener('touchstart', function() {});
+      });
+
+      // Enhanced file input for mobile
+      const fileInput = document.getElementById('fileInput');
+      if (fileInput) {
+        fileInput.setAttribute('accept', '*/*');
+        fileInput.setAttribute('capture', 'environment');
+      }
+
       resetState();
     });
 
-    // Performance optimizations
+    // Mobile-optimized touch handling
+    let touchStartY = 0;
+    document.addEventListener('touchstart', function(e) {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+      const touchY = e.touches[0].clientY;
+      const touchDiff = touchStartY - touchY;
+      
+      // Prevent bounce scrolling at top/bottom
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+      
+      if ((scrollTop === 0 && touchDiff < 0) || 
+          (scrollTop + clientHeight >= scrollHeight && touchDiff > 0)) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Graceful cleanup
     window.addEventListener('beforeunload', function() {
       if (ws) ws.close();
       if (pc) pc.close();
+      receivedFiles.forEach(f => { try { URL.revokeObjectURL(f.url); } catch (e) {} });
     });
 
-    // Add smooth animations for role cards
-    window.addEventListener('load', function() {
-      const roleCards = document.querySelectorAll('.role-card');
-      roleCards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
-        card.style.animation = 'slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
-      });
+    // Prevent accidental refresh on mobile
+    window.addEventListener('beforeunload', function(e) {
+      if (isTransferring || (selectedFiles.length > 0 && selectedFiles.some(f => f.selected)) || receivedFiles.length > 0) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
     });
+
+    // Handle orientation change
+    window.addEventListener('orientationchange', function() {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 100);
+    });
+
+    // Network status monitoring
+    window.addEventListener('online', function() {
+      addChatMessage('System', '🌐 Connection restored');
+    });
+
+    window.addEventListener('offline', function() {
+      addChatMessage('System', '📡 Connection lost - transfers may be interrupted');
+    });
+
+    // Performance monitoring
+    if ('memory' in performance) {
+      setInterval(() => {
+        const memory = performance.memory;
+        if (memory.usedJSHeapSize / memory.jsHeapSizeLimit > 0.9) {
+          console.warn('High memory usage detected');
+          addChatMessage('System', '⚠️ High memory usage - consider clearing files');
+        }
+      }, 30000);
+    }
   </script>
 </body>
 </html>
