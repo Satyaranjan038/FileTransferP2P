@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SecureShare - P2P File Transfer</title>
+  <title>SecureShare Pro - Ultra-Fast P2P File Transfer</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     * {
       margin: 0;
@@ -28,6 +28,8 @@
       --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
       --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       --gradient-alt: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --glass: rgba(255, 255, 255, 0.25);
+      --glass-border: rgba(255, 255, 255, 0.18);
     }
 
     body {
@@ -66,9 +68,10 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       overflow: hidden;
       width: 100%;
-      max-width: 900px;
+      max-width: 1200px;
       position: relative;
       z-index: 1;
+      min-height: 80vh;
     }
 
     .header {
@@ -90,25 +93,32 @@
     }
 
     .logo {
-      font-size: 2.5rem;
-      font-weight: 700;
+      font-size: 2.8rem;
+      font-weight: 800;
       margin-bottom: 8px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background: linear-gradient(135deg, #fff, #e0e7ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .tagline {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      font-weight: 400;
+      font-size: 1.2rem;
+      opacity: 0.95;
+      font-weight: 500;
     }
 
     .main-content {
       padding: 40px;
+      height: calc(100vh - 200px);
+      overflow-y: auto;
     }
 
     .section {
       display: none;
-      animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      height: 100%;
     }
 
     .section.active {
@@ -118,7 +128,7 @@
     @keyframes slideIn {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
@@ -129,20 +139,23 @@
     .role-selector {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 32px;
       margin-bottom: 32px;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     .role-card {
       background: white;
       border: 2px solid var(--border);
-      border-radius: 16px;
-      padding: 32px 24px;
+      border-radius: 20px;
+      padding: 40px 32px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       position: relative;
       overflow: hidden;
+      transform: perspective(1000px) rotateX(0deg);
     }
 
     .role-card::before {
@@ -152,8 +165,8 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      transition: left 0.6s;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      transition: left 0.8s;
     }
 
     .role-card:hover::before {
@@ -162,62 +175,61 @@
 
     .role-card:hover {
       border-color: var(--primary);
-      transform: translateY(-4px);
-      box-shadow: var(--shadow);
+      transform: perspective(1000px) rotateX(5deg) translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
     }
 
     .role-card.sender:hover {
       border-color: var(--primary);
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(99, 102, 241, 0.1));
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.15));
     }
 
     .role-card.receiver:hover {
       border-color: var(--secondary);
-      background: linear-gradient(135deg, rgba(236, 72, 153, 0.05), rgba(236, 72, 153, 0.1));
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(236, 72, 153, 0.15));
+      box-shadow: 0 20px 40px -10px rgba(236, 72, 153, 0.3);
     }
 
     .role-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
+      font-size: 4rem;
+      margin-bottom: 20px;
       display: block;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
     }
 
     .role-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 8px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 12px;
       color: var(--dark);
     }
 
     .role-desc {
       color: var(--gray);
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 1rem;
+      line-height: 1.6;
     }
 
     .otp-section {
       text-align: center;
       margin-bottom: 32px;
-    }
-
-    .otp-label {
-      font-size: 1.1rem;
-      color: var(--gray);
-      margin-bottom: 16px;
+      max-width: 600px;
+      margin: 0 auto 32px;
     }
 
     .otp-display {
       background: var(--gradient);
       color: white;
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: 8px;
-      padding: 24px 32px;
-      border-radius: 16px;
-      margin: 16px 0;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: 12px;
+      padding: 32px 48px;
+      border-radius: 20px;
+      margin: 24px 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
       position: relative;
       overflow: hidden;
+      box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.4);
     }
 
     .otp-display::after {
@@ -227,8 +239,8 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      animation: shine 3s infinite;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shine 4s infinite;
     }
 
     @keyframes shine {
@@ -237,51 +249,48 @@
       100% { left: 100%; }
     }
 
-    .otp-input-section {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
     .otp-inputs {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin: 20px 0;
+      gap: 16px;
+      margin: 32px 0;
     }
 
     .otp-input {
-      width: 56px;
-      height: 64px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
+      width: 64px;
+      height: 72px;
+      border: 3px solid var(--border);
+      border-radius: 16px;
       text-align: center;
-      font-size: 1.5rem;
-      font-weight: 600;
+      font-size: 1.8rem;
+      font-weight: 700;
       transition: all 0.3s ease;
       background: white;
+      color: var(--dark);
     }
 
     .otp-input:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-      transform: scale(1.05);
+      box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.15);
+      transform: scale(1.1);
     }
 
     .btn {
       background: var(--primary);
       color: white;
       border: none;
-      padding: 16px 32px;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
+      padding: 18px 36px;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       position: relative;
       overflow: hidden;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
+      box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.4);
     }
 
     .btn::before {
@@ -291,8 +300,8 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.6s;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.8s;
     }
 
     .btn:hover::before {
@@ -301,52 +310,56 @@
 
     .btn:hover {
       background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.5);
     }
 
     .btn:active {
-      transform: translateY(0);
+      transform: translateY(-2px) scale(1.02);
     }
 
     .btn.secondary {
       background: var(--secondary);
+      box-shadow: 0 8px 16px -4px rgba(236, 72, 153, 0.4);
     }
 
     .btn.secondary:hover {
       background: #db2777;
+      box-shadow: 0 15px 30px -5px rgba(236, 72, 153, 0.5);
     }
 
     .connected-section {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 16px;
-      padding: 24px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.08));
+      border: 2px solid rgba(16, 185, 129, 0.25);
+      border-radius: 20px;
+      padding: 32px;
       margin-bottom: 32px;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
     .connection-status {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 16px;
       color: var(--success);
-      font-weight: 600;
-      font-size: 1.1rem;
+      font-weight: 700;
+      font-size: 1.3rem;
     }
 
     .status-dot {
-      width: 12px;
-      height: 12px;
+      width: 16px;
+      height: 16px;
       background: var(--success);
       border-radius: 50%;
       animation: pulse 2s infinite;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
     }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.7; transform: scale(1.1); }
+      50% { opacity: 0.7; transform: scale(1.2); }
     }
 
     .transfer-section {
@@ -354,49 +367,53 @@
       grid-template-columns: 1fr 1fr;
       gap: 32px;
       margin-bottom: 32px;
+      height: calc(100vh - 400px);
     }
 
     .transfer-panel {
       background: white;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 8px 16px -4px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
     }
 
     .panel-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 16px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
       color: var(--dark);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
     }
 
     .chat-area {
       height: 200px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
       font-family: 'Inter', monospace;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       resize: none;
       background: #f8fafc;
-      margin-bottom: 16px;
-      line-height: 1.5;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      flex-grow: 1;
     }
 
     .chat-input {
       display: flex;
-      gap: 12px;
+      gap: 16px;
     }
 
     .chat-input input {
       flex: 1;
-      padding: 12px 16px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      padding: 16px 20px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
       font-size: 1rem;
       transition: border-color 0.3s;
     }
@@ -404,54 +421,138 @@
     .chat-input input:focus {
       outline: none;
       border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
     }
 
     .file-upload {
-      border: 2px dashed var(--border);
-      border-radius: 12px;
-      padding: 32px 16px;
+      border: 3px dashed var(--border);
+      border-radius: 20px;
+      padding: 48px 24px;
       text-align: center;
-      margin-bottom: 16px;
-      transition: all 0.3s ease;
+      margin-bottom: 24px;
+      transition: all 0.4s ease;
       cursor: pointer;
-      background: #f8fafc;
+      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .file-upload::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.05) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+
+    .file-upload:hover::before {
+      transform: translateX(100%);
     }
 
     .file-upload:hover {
       border-color: var(--primary);
-      background: rgba(99, 102, 241, 0.05);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.12));
+      transform: scale(1.02);
+      box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.2);
     }
 
     .file-upload.drag-over {
       border-color: var(--primary);
-      background: rgba(99, 102, 241, 0.1);
-      transform: scale(1.02);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.2));
+      transform: scale(1.05);
+      box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.3);
     }
 
     .file-icon {
-      font-size: 2.5rem;
+      font-size: 3.5rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.3));
+    }
+
+    .file-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 20px 0;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      background: white;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      transition: background-color 0.3s;
+    }
+
+    .file-item:last-child {
+      border-bottom: none;
+    }
+
+    .file-item:hover {
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .file-checkbox {
+      margin-right: 16px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .file-info {
+      flex-grow: 1;
+    }
+
+    .file-name {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .file-size {
       color: var(--gray);
-      margin-bottom: 12px;
+      font-size: 0.9rem;
+    }
+
+    .file-remove {
+      color: var(--error);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .file-remove:hover {
+      background: rgba(239, 68, 68, 0.1);
     }
 
     .progress-container {
-      margin: 16px 0;
+      margin: 24px 0;
     }
 
     .progress-bar {
       width: 100%;
-      height: 8px;
+      height: 12px;
       background: #e2e8f0;
-      border-radius: 4px;
+      border-radius: 8px;
       overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .progress-fill {
       height: 100%;
       background: var(--gradient);
-      border-radius: 4px;
+      border-radius: 8px;
       transition: width 0.3s ease;
       position: relative;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
     }
 
     .progress-fill::after {
@@ -461,7 +562,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
       animation: progress-shine 2s infinite;
     }
 
@@ -473,27 +574,185 @@
     .progress-text {
       display: flex;
       justify-content: space-between;
-      margin-top: 8px;
-      font-size: 0.9rem;
+      margin-top: 12px;
+      font-size: 1rem;
       color: var(--gray);
+      font-weight: 500;
+    }
+
+    .speed-indicator {
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .download-section {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-top: 24px;
+    }
+
+    .download-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .download-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .select-all-btn {
+      background: var(--success);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .select-all-btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .download-item {
+      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .download-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+      transition: left 0.6s;
+    }
+
+    .download-item:hover::before {
+      left: 100%;
+    }
+
+    .download-item:hover {
+      border-color: var(--success);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+    }
+
+    .download-item.selected {
+      border-color: var(--success);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+    }
+
+    .download-checkbox {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .download-file-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      color: var(--success);
+    }
+
+    .download-file-name {
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .download-file-size {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
     }
 
     .download-link {
       background: var(--success);
       color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
+      padding: 12px 20px;
+      border-radius: 12px;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-top: 16px;
+      font-weight: 600;
       transition: all 0.3s ease;
+      width: 100%;
+      justify-content: center;
     }
 
     .download-link:hover {
       background: #059669;
       transform: translateY(-2px);
+      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4);
+    }
+
+    .bulk-download {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: var(--success);
+      color: white;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      display: none;
+    }
+
+    .bulk-download:hover {
+      background: #059669;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -6px rgba(16, 185, 129, 0.5);
+    }
+
+    .bulk-download.show {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .back-btn {
@@ -506,67 +765,183 @@
     }
 
     .status-message {
-      padding: 16px;
-      border-radius: 12px;
-      margin: 16px 0;
-      font-weight: 500;
+      padding: 20px;
+      border-radius: 16px;
+      margin: 20px 0;
+      font-weight: 600;
+      font-size: 1.1rem;
     }
 
     .status-success {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.1));
+      border: 2px solid rgba(16, 185, 129, 0.25);
       color: var(--success);
     }
 
     .status-error {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.1));
+      border: 2px solid rgba(239, 68, 68, 0.25);
       color: var(--error);
     }
 
     .status-info {
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.2);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.1));
+      border: 2px solid rgba(99, 102, 241, 0.25);
       color: var(--primary);
+    }
+
+    /* Enhanced Responsiveness */
+    @media (max-width: 1024px) {
+      .container {
+        max-width: 95vw;
+        margin: 10px;
+      }
+      
+      .transfer-section {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      
+      .download-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
     }
 
     @media (max-width: 768px) {
       .container {
         border-radius: 0;
         min-height: 100vh;
+        max-width: 100vw;
+        margin: 0;
       }
 
       .header {
         padding: 24px 20px;
       }
 
+      .logo {
+        font-size: 2.2rem;
+      }
+
       .main-content {
         padding: 24px 20px;
+        height: calc(100vh - 150px);
       }
 
       .role-selector {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 20px;
+      }
+
+      .role-card {
+        padding: 32px 24px;
+      }
+
+      .otp-display {
+        font-size: 2.5rem;
+        letter-spacing: 8px;
+        padding: 24px;
+      }
+
+      .otp-inputs {
+        gap: 12px;
+      }
+
+      .otp-input {
+        width: 48px;
+        height: 56px;
+        font-size: 1.5rem;
       }
 
       .transfer-section {
         grid-template-columns: 1fr;
         gap: 24px;
+        height: auto;
       }
 
-      .otp-display {
-        font-size: 2rem;
-        letter-spacing: 4px;
-        padding: 20px;
+      .transfer-panel {
+        padding: 24px;
       }
+
+      .file-upload {
+        padding: 32px 16px;
+      }
+
+      .download-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bulk-download {
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        border-radius: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .otp-inputs {
+        gap: 8px;
+      }
+
+      .otp-input {
+        width: 42px;
+        height: 50px;
+        font-size: 1.3rem;
+      }
+
+      .btn {
+        padding: 14px 24px;
+        font-size: 1rem;
+      }
+
+      .file-upload {
+        padding: 24px 12px;
+      }
+    }
+
+    /* Performance optimizations */
+    .section {
+      will-change: transform, opacity;
+    }
+
+    .role-card {
+      will-change: transform;
+    }
+
+    .btn {
+      will-change: transform;
+    }
+
+    .progress-fill {
+      will-change: width;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">🚀 SecureShare</div>
-      <div class="tagline">Secure Peer-to-Peer File Transfer</div>
+      <div class="logo">🚀 SecureShare Pro</div>
+      <div class="tagline">Ultra-Fast Peer-to-Peer File Transfer • Up to 5GB • Multi-Select</div>
     </div>
 
     <div class="main-content">
@@ -576,12 +951,12 @@
           <div class="role-card sender" onclick="beCreator()">
             <div class="role-icon">📤</div>
             <div class="role-title">I'm Sending</div>
-            <div class="role-desc">Generate a secure code and share files with someone</div>
+            <div class="role-desc">Generate a secure code and share multiple files up to 5GB each</div>
           </div>
           <div class="role-card receiver" onclick="beJoiner()">
             <div class="role-icon">📥</div>
             <div class="role-title">I'm Receiving</div>
-            <div class="role-desc">Enter the code to receive files securely</div>
+            <div class="role-desc">Enter the code to receive files with ultra-fast transfer speeds</div>
           </div>
         </div>
       </div>
@@ -591,11 +966,11 @@
         <div class="otp-section">
           <div class="otp-label">Share this secure code with the receiver:</div>
           <div class="otp-display" id="otpCode">------</div>
-          <div style="color: var(--gray); font-size: 0.9rem;">⏱️ Code expires in 10 minutes</div>
+          <div style="color: var(--gray); font-size: 1rem; font-weight: 500;">⏱️ Code expires in 10 minutes • 🔒 End-to-end encrypted</div>
         </div>
         <div style="text-align: center;">
           <button class="btn back-btn" onclick="goBack()">← Back</button>
-          <div class="status-message status-info">Waiting for receiver to connect...</div>
+          <div class="status-message status-info">🔄 Waiting for receiver to connect...</div>
         </div>
       </div>
 
@@ -613,7 +988,7 @@
           </div>
           <div style="text-align: center;">
             <button class="btn back-btn" onclick="goBack()">← Back</button>
-            <button class="btn secondary" onclick="submitOtp()">🔗 Connect</button>
+            <button class="btn secondary" onclick="submitOtp()">🔗 Connect Securely</button>
           </div>
           <div id="joinStatus"></div>
         </div>
@@ -624,14 +999,14 @@
         <div class="connected-section">
           <div class="connection-status">
             <div class="status-dot"></div>
-            <span>🔒 Securely Connected</span>
+            <span>🔒 Securely Connected • Ultra-Fast Mode Active</span>
           </div>
         </div>
 
         <div class="transfer-section">
           <!-- Chat Panel -->
           <div class="transfer-panel">
-            <div class="panel-title">💬 Chat</div>
+            <div class="panel-title">💬 Secure Chat</div>
             <textarea id="chat" class="chat-area" placeholder="Messages will appear here..." readonly></textarea>
             <div class="chat-input">
               <input id="msgBox" type="text" placeholder="Type a message..." onkeypress="handleEnter(event)">
@@ -639,19 +1014,35 @@
             </div>
           </div>
 
-          <!-- File Transfer Panel -->
+          <!-- Enhanced File Transfer Panel -->
           <div class="transfer-panel">
-            <div class="panel-title">📁 File Transfer</div>
+            <div class="panel-title">📁 Multi-File Transfer (Up to 5GB each)</div>
             <div class="file-upload" onclick="document.getElementById('fileInput').click()" 
                  ondrop="handleDrop(event)" ondragover="handleDragOver(event)" 
                  ondragleave="handleDragLeave(event)">
               <div class="file-icon">📄</div>
-              <div style="font-weight: 600; margin-bottom: 4px;">Click to select or drag files here</div>
-              <div style="color: var(--gray); font-size: 0.9rem;">Supports any file type, any size</div>
+              <div style="font-weight: 700; margin-bottom: 8px; font-size: 1.1rem;">Click to select or drag multiple files here</div>
+              <div style="color: var(--gray); font-size: 0.95rem; line-height: 1.4;">
+                ✨ Multi-select supported<br>
+                🚀 Ultra-fast transfer up to 5GB per file<br>
+                📱 Any file type supported
+              </div>
             </div>
-            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect()">
-            <button class="btn" onclick="sendFile()" id="sendFileBtn" style="width: 100%;" disabled>
-              📤 Send File
+            <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileSelect()">
+            
+            <div id="fileList" class="file-list" style="display: none;"></div>
+            
+            <div style="display: flex; gap: 12px; margin: 16px 0;">
+              <button class="btn" onclick="selectAllFiles()" id="selectAllBtn" style="flex: 1;" disabled>
+                ✅ Select All
+              </button>
+              <button class="btn secondary" onclick="clearFiles()" id="clearFilesBtn" style="flex: 1;" disabled>
+                🗑️ Clear All
+              </button>
+            </div>
+            
+            <button class="btn" onclick="sendFiles()" id="sendFileBtn" style="width: 100%;" disabled>
+              📤 Send Selected Files
             </button>
             
             <div id="progressContainer" class="progress-container" style="display: none;">
@@ -660,12 +1051,24 @@
               </div>
               <div class="progress-text">
                 <span id="progressText">Preparing...</span>
-                <span id="progressPercent">0%</span>
+                <div>
+                  <span id="progressPercent">0%</span>
+                  <span id="transferSpeed" class="speed-indicator"></span>
+                </div>
               </div>
             </div>
-
-            <div id="downloadLink"></div>
           </div>
+        </div>
+
+        <!-- Enhanced Download Section -->
+        <div id="downloadSection" class="download-section" style="display: none;">
+          <div class="download-header">
+            <div class="download-title">📥 Received Files</div>
+            <button class="select-all-btn" onclick="selectAllDownloads()">
+              ✅ Select All Downloads
+            </button>
+          </div>
+          <div id="downloadGrid" class="download-grid"></div>
         </div>
 
         <div style="text-align: center; margin-top: 24px;">
@@ -675,13 +1078,27 @@
     </div>
   </div>
 
+  <!-- Bulk Download Button -->
+  <button id="bulkDownloadBtn" class="bulk-download" onclick="downloadSelected()">
+    <span>📥</span>
+    <span id="bulkDownloadText">Download Selected (0)</span>
+  </button>
+
   <script>
     let ws, pc, dataChannel;
     let role;
     let receivedChunks = [];
     let fileMetadata = null;
-    let selectedFile = null;
+    let selectedFiles = [];
     let isTransferring = false;
+    let transferStartTime = 0;
+    let totalBytesTransferred = 0;
+    let receivedFiles = [];
+    let selectedDownloads = new Set();
+    
+    // Enhanced chunk size for better performance
+    const CHUNK_SIZE = 64 * 1024; // 64KB chunks for faster transfer
+    const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024; // 5GB limit
 
     function showSection(sectionId) {
       document.querySelectorAll('.section').forEach(section => {
@@ -693,18 +1110,21 @@
     function goBack() {
       showSection('roleSelect');
       if (ws) ws.close();
+      resetState();
+    }
+
+    function resetState() {
+      selectedFiles = [];
+      receivedFiles = [];
+      selectedDownloads.clear();
+      updateFileList();
+      updateDownloadSection();
+      updateBulkDownloadButton();
     }
 
     function beCreator() {
       role = "creator";
-      // ws = new WebSocket("ws://localhost:8000/ws/creator");
-       ws = new WebSocket("wss://filetransferp2p.onrender.com/ws/creator");
-
-    // Detect protocol: ws:// for http, wss:// for https
-    // const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-    // const host = window.location.host; // works both locally and on Render
-    // const ws = new WebSocket(`${protocol}${host}/ws/creator`);
-
+      ws = new WebSocket("wss://filetransferp2p.onrender.com/ws/creator");
       setupWs();
       showSection('otpSection');
     }
@@ -720,23 +1140,16 @@
         document.getElementById(`otp${i}`).value).join('');
       
       if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
-        showStatus('Enter a valid 6-digit code', 'error', 'joinStatus');
+        showStatus('⚠️ Enter a valid 6-digit code', 'error', 'joinStatus');
         return;
       }
 
-      // ws = new WebSocket("ws://localhost:8000/ws/joiner");
-       ws = new WebSocket("wss://filetransferp2p.onrender.com/ws/joiner");
-
-    // Detect protocol: ws:// for http, wss:// for https
-        // const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        // const host = window.location.host; // works both locally and on Render
-        // const ws = new WebSocket(`${protocol}${host}/ws/joiner`);
-
+      ws = new WebSocket("wss://filetransferp2p.onrender.com/ws/joiner");
       ws.onopen = () => {
         ws.send(JSON.stringify({ otp: otp }));
       };
       setupWs();
-      showStatus('Connecting...', 'info', 'joinStatus');
+      showStatus('🔄 Connecting securely...', 'info', 'joinStatus');
     }
 
     function setupWs() {
@@ -749,7 +1162,7 @@
         else if (msg.type === "connected") {
           startWebRTC();
           showSection('connectedSection');
-          showStatus('Connected! You can now chat and share files.', 'success', 'joinStatus');
+          showStatus('✅ Connected! Ultra-fast transfer mode active.', 'success', 'joinStatus');
         } 
         else if (msg.type === "offer") {
           await pc.setRemoteDescription(msg);
@@ -764,16 +1177,16 @@
           await pc.addIceCandidate(msg.candidate);
         }
         else if (msg.type === "error") {
-          showStatus(msg.message, 'error', 'joinStatus');
+          showStatus(`❌ ${msg.message}`, 'error', 'joinStatus');
         }
       };
 
       ws.onclose = () => {
-        showStatus('Connection lost', 'error', 'joinStatus');
+        showStatus('🔌 Connection lost', 'error', 'joinStatus');
       };
 
       ws.onerror = () => {
-        showStatus('Connection failed. Please try again.', 'error', 'joinStatus');
+        showStatus('❌ Connection failed. Please try again.', 'error', 'joinStatus');
       };
     }
 
@@ -781,7 +1194,8 @@
       pc = new RTCPeerConnection({
         iceServers: [
           { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' }
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' }
         ]
       });
 
@@ -797,7 +1211,10 @@
       };
 
       if (role === "creator") {
-        dataChannel = pc.createDataChannel("data");
+        dataChannel = pc.createDataChannel("data", { 
+          ordered: false, // Allow out-of-order delivery for speed
+          maxPacketLifeTime: 3000 
+        });
         setupDataChannel(dataChannel);
         pc.createOffer().then(offer => {
           pc.setLocalDescription(offer);
@@ -809,7 +1226,7 @@
     function setupDataChannel(channel) {
       channel.onopen = () => {
         console.log("Data channel open");
-        addChatMessage("System", "🔒 Secure connection established!");
+        addChatMessage("System", "🔒 Ultra-fast secure connection established!");
       };
       
       channel.onmessage = (e) => handleDataMessage(e.data);
@@ -827,8 +1244,10 @@
           if (obj.type === "file-meta") {
             fileMetadata = obj;
             receivedChunks = [];
-            showProgress(0, `Receiving ${obj.name}`);
-            addChatMessage("System", `📥 Receiving file: ${obj.name} (${formatFileSize(obj.size)})`);
+            transferStartTime = Date.now();
+            totalBytesTransferred = 0;
+            showProgress(0, `Receiving ${obj.name}`, 0);
+            addChatMessage("System", `📥 Receiving: ${obj.name} (${formatFileSize(obj.size)})`);
           } else if (obj.type === "file-complete") {
             completeFileReceive();
           } else if (obj.type === "chat") {
@@ -840,8 +1259,13 @@
       } else {
         if (fileMetadata) {
           receivedChunks.push(data);
-          const progress = (receivedChunks.length * 16 * 1024) / fileMetadata.size * 100;
-          showProgress(Math.min(progress, 100), `Receiving ${fileMetadata.name}`);
+          totalBytesTransferred += data.byteLength;
+          
+          const progress = (totalBytesTransferred / fileMetadata.size) * 100;
+          const elapsed = (Date.now() - transferStartTime) / 1000;
+          const speed = totalBytesTransferred / elapsed;
+          
+          showProgress(Math.min(progress, 100), `Receiving ${fileMetadata.name}`, speed);
         }
       }
     }
@@ -849,15 +1273,104 @@
     function completeFileReceive() {
       const received = new Blob(receivedChunks);
       const url = URL.createObjectURL(received);
-      document.getElementById("downloadLink").innerHTML =
-        `<a href="${url}" download="${fileMetadata.name}" class="download-link">
-          📥 Download ${fileMetadata.name}
-        </a>`;
+      
+      const fileInfo = {
+        name: fileMetadata.name,
+        size: fileMetadata.size,
+        url: url,
+        id: Date.now() + Math.random()
+      };
+      
+      receivedFiles.push(fileInfo);
+      updateDownloadSection();
       
       addChatMessage("System", `✅ File received: ${fileMetadata.name}`);
       hideProgress();
       receivedChunks = [];
       fileMetadata = null;
+      totalBytesTransferred = 0;
+    }
+
+    function updateDownloadSection() {
+      const downloadSection = document.getElementById('downloadSection');
+      const downloadGrid = document.getElementById('downloadGrid');
+      
+      if (receivedFiles.length === 0) {
+        downloadSection.style.display = 'none';
+        return;
+      }
+      
+      downloadSection.style.display = 'block';
+      downloadGrid.innerHTML = '';
+      
+      receivedFiles.forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = `download-item ${selectedDownloads.has(file.id) ? 'selected' : ''}`;
+        fileItem.innerHTML = `
+          <input type="checkbox" class="download-checkbox" ${selectedDownloads.has(file.id) ? 'checked' : ''} 
+                 onchange="toggleDownloadSelection('${file.id}')">
+          <div class="download-file-icon">${getFileIcon(file.name)}</div>
+          <div class="download-file-name">${file.name}</div>
+          <div class="download-file-size">${formatFileSize(file.size)}</div>
+          <a href="${file.url}" download="${file.name}" class="download-link">
+            📥 Download
+          </a>
+        `;
+        downloadGrid.appendChild(fileItem);
+      });
+      
+      updateBulkDownloadButton();
+    }
+
+    function toggleDownloadSelection(fileId) {
+      if (selectedDownloads.has(fileId)) {
+        selectedDownloads.delete(fileId);
+      } else {
+        selectedDownloads.add(fileId);
+      }
+      updateDownloadSection();
+    }
+
+    function selectAllDownloads() {
+      receivedFiles.forEach(file => selectedDownloads.add(file.id));
+      updateDownloadSection();
+    }
+
+    function updateBulkDownloadButton() {
+      const bulkBtn = document.getElementById('bulkDownloadBtn');
+      const bulkText = document.getElementById('bulkDownloadText');
+      
+      if (selectedDownloads.size > 0) {
+        bulkBtn.classList.add('show');
+        bulkText.textContent = `Download Selected (${selectedDownloads.size})`;
+      } else {
+        bulkBtn.classList.remove('show');
+      }
+    }
+
+    function downloadSelected() {
+      receivedFiles
+        .filter(file => selectedDownloads.has(file.id))
+        .forEach(file => {
+          const link = document.createElement('a');
+          link.href = file.url;
+          link.download = file.name;
+          link.click();
+        });
+    }
+
+    function getFileIcon(filename) {
+      const ext = filename.split('.').pop().toLowerCase();
+      const icons = {
+        'pdf': '📄', 'doc': '📝', 'docx': '📝', 'txt': '📝',
+        'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️', 'svg': '🖼️',
+        'mp4': '🎥', 'avi': '🎥', 'mov': '🎥', 'wmv': '🎥',
+        'mp3': '🎵', 'wav': '🎵', 'flac': '🎵', 'm4a': '🎵',
+        'zip': '🗜️', 'rar': '🗜️', '7z': '🗜️',
+        'exe': '⚙️', 'msi': '⚙️',
+        'html': '🌐', 'css': '🎨', 'js': '⚡', 'json': '📋'
+      };
+      return icons[ext] || '📄';
     }
 
     function addChatMessage(sender, message) {
@@ -885,11 +1398,16 @@
 
     function handleFileSelect() {
       const fileInput = document.getElementById('fileInput');
-      if (fileInput.files.length > 0) {
-        selectedFile = fileInput.files[0];
-        document.getElementById('sendFileBtn').disabled = false;
-        document.getElementById('sendFileBtn').innerHTML = `📤 Send ${selectedFile.name}`;
-      }
+      Array.from(fileInput.files).forEach(file => {
+        if (file.size > MAX_FILE_SIZE) {
+          addChatMessage("System", `❌ File too large: ${file.name} (max 5GB)`);
+          return;
+        }
+        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+          selectedFiles.push(file);
+        }
+      });
+      updateFileList();
     }
 
     function handleDrop(event) {
@@ -897,12 +1415,16 @@
       const fileUpload = event.currentTarget;
       fileUpload.classList.remove('drag-over');
       
-      const files = event.dataTransfer.files;
-      if (files.length > 0) {
-        selectedFile = files[0];
-        document.getElementById('sendFileBtn').disabled = false;
-        document.getElementById('sendFileBtn').innerHTML = `📤 Send ${selectedFile.name}`;
-      }
+      Array.from(event.dataTransfer.files).forEach(file => {
+        if (file.size > MAX_FILE_SIZE) {
+          addChatMessage("System", `❌ File too large: ${file.name} (max 5GB)`);
+          return;
+        }
+        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+          selectedFiles.push(file);
+        }
+      });
+      updateFileList();
     }
 
     function handleDragOver(event) {
@@ -915,67 +1437,159 @@
       event.currentTarget.classList.remove('drag-over');
     }
 
-    function sendFile() {
-      if (!selectedFile || !dataChannel || isTransferring) return;
+    function updateFileList() {
+      const fileList = document.getElementById('fileList');
+      const sendBtn = document.getElementById('sendFileBtn');
+      const selectAllBtn = document.getElementById('selectAllBtn');
+      const clearBtn = document.getElementById('clearFilesBtn');
+      
+      if (selectedFiles.length === 0) {
+        fileList.style.display = 'none';
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '📤 Send Selected Files';
+        selectAllBtn.disabled = true;
+        clearBtn.disabled = true;
+        return;
+      }
+      
+      fileList.style.display = 'block';
+      selectAllBtn.disabled = false;
+      clearBtn.disabled = false;
+      
+      fileList.innerHTML = '';
+      selectedFiles.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+          <input type="checkbox" class="file-checkbox" ${file.selected ? 'checked' : ''} 
+                 onchange="toggleFileSelection(${index})">
+          <div class="file-info">
+            <div class="file-name">${getFileIcon(file.name)} ${file.name}</div>
+            <div class="file-size">${formatFileSize(file.size)}</div>
+          </div>
+          <div class="file-remove" onclick="removeFile(${index})">🗑️</div>
+        `;
+        fileList.appendChild(fileItem);
+      });
+      
+      const selectedCount = selectedFiles.filter(f => f.selected).length;
+      const totalSize = selectedFiles.filter(f => f.selected).reduce((sum, f) => sum + f.size, 0);
+      
+      sendBtn.disabled = selectedCount === 0;
+      sendBtn.innerHTML = selectedCount > 0 
+        ? `📤 Send ${selectedCount} Files (${formatFileSize(totalSize)})` 
+        : '📤 Send Selected Files';
+    }
+
+    function toggleFileSelection(index) {
+      selectedFiles[index].selected = !selectedFiles[index].selected;
+      updateFileList();
+    }
+
+    function selectAllFiles() {
+      selectedFiles.forEach(file => file.selected = true);
+      updateFileList();
+    }
+
+    function clearFiles() {
+      selectedFiles = [];
+      updateFileList();
+    }
+
+    function removeFile(index) {
+      selectedFiles.splice(index, 1);
+      updateFileList();
+    }
+
+    function sendFiles() {
+      const filesToSend = selectedFiles.filter(f => f.selected);
+      if (filesToSend.length === 0 || !dataChannel || isTransferring) return;
       
       isTransferring = true;
       document.getElementById('sendFileBtn').disabled = true;
       
-      // Send file metadata
+      sendFilesSequentially(filesToSend, 0);
+    }
+
+    function sendFilesSequentially(files, index) {
+      if (index >= files.length) {
+        addChatMessage("System", `✅ All files sent successfully! (${files.length} files)`);
+        isTransferring = false;
+        document.getElementById('sendFileBtn').disabled = false;
+        hideProgress();
+        // Clear sent files
+        selectedFiles = selectedFiles.filter(f => !f.selected);
+        updateFileList();
+        return;
+      }
+      
+      const file = files[index];
+      sendSingleFile(file, () => {
+        setTimeout(() => sendFilesSequentially(files, index + 1), 500);
+      });
+    }
+
+    function sendSingleFile(file, onComplete) {
       const metadata = {
         type: "file-meta",
-        name: selectedFile.name,
-        size: selectedFile.size
+        name: file.name,
+        size: file.size
       };
       
       dataChannel.send(JSON.stringify(metadata));
-      addChatMessage("You", `📤 Sending file: ${selectedFile.name} (${formatFileSize(selectedFile.size)})`);
+      addChatMessage("You", `📤 Sending: ${file.name} (${formatFileSize(file.size)})`);
       
-      // Send file in chunks
-      const chunkSize = 16 * 1024; // 16KB chunks
       let offset = 0;
       const reader = new FileReader();
+      transferStartTime = Date.now();
+      totalBytesTransferred = 0;
       
       reader.onload = e => {
         dataChannel.send(e.target.result);
         offset += e.target.result.byteLength;
+        totalBytesTransferred += e.target.result.byteLength;
         
-        const progress = (offset / selectedFile.size) * 100;
-        showProgress(progress, `Sending ${selectedFile.name}`);
+        const progress = (offset / file.size) * 100;
+        const elapsed = (Date.now() - transferStartTime) / 1000;
+        const speed = totalBytesTransferred / elapsed;
+        
+        showProgress(progress, `Sending ${file.name}`, speed);
 
-        if (offset < selectedFile.size) {
+        if (offset < file.size) {
           readSlice(offset);
         } else {
-          // File transfer complete
           dataChannel.send(JSON.stringify({ type: "file-complete" }));
-          addChatMessage("System", `✅ File sent successfully: ${selectedFile.name}`);
-          hideProgress();
-          isTransferring = false;
-          document.getElementById('sendFileBtn').innerHTML = "📤 Send File";
-          document.getElementById('sendFileBtn').disabled = true;
-          selectedFile = null;
+          addChatMessage("System", `✅ Sent: ${file.name}`);
+          onComplete();
         }
       };
 
       function readSlice(o) {
-        const slice = selectedFile.slice(o, o + chunkSize);
+        const slice = file.slice(o, o + CHUNK_SIZE);
         reader.readAsArrayBuffer(slice);
       }
       
       readSlice(0);
-      showProgress(0, `Sending ${selectedFile.name}`);
+      showProgress(0, `Sending ${file.name}`, 0);
     }
 
-    function showProgress(percent, text) {
+    function showProgress(percent, text, speed = 0) {
       const container = document.getElementById('progressContainer');
       const fill = document.getElementById('progressFill');
       const progressText = document.getElementById('progressText');
       const progressPercent = document.getElementById('progressPercent');
+      const transferSpeed = document.getElementById('transferSpeed');
       
       container.style.display = 'block';
       fill.style.width = percent + '%';
       progressText.textContent = text;
       progressPercent.textContent = Math.round(percent) + '%';
+      
+      if (speed > 0) {
+        transferSpeed.textContent = ` • ${formatSpeed(speed)}`;
+      } else {
+        transferSpeed.textContent = '';
+      }
     }
 
     function hideProgress() {
@@ -991,6 +1605,14 @@
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
+    function formatSpeed(bytesPerSecond) {
+      if (bytesPerSecond === 0) return '0 B/s';
+      const k = 1024;
+      const sizes = ['B/s', 'KB/s', 'MB/s', 'GB/s'];
+      const i = Math.floor(Math.log(bytesPerSecond) / Math.log(k));
+      return parseFloat((bytesPerSecond / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
     function showStatus(message, type, elementId) {
       const element = document.getElementById(elementId);
       if (element) {
@@ -1004,7 +1626,6 @@
         document.getElementById(`otp${index + 1}`).focus();
       }
       
-      // Auto-submit when all fields are filled
       const allFilled = Array.from({length: 6}, (_, i) => 
         document.getElementById(`otp${i}`).value).every(val => val.length === 1);
       
@@ -1014,35 +1635,19 @@
     }
 
     function disconnect() {
-      if (dataChannel) {
-        dataChannel.close();
-      }
-      if (pc) {
-        pc.close();
-      }
-      if (ws) {
-        ws.close();
-      }
+      if (dataChannel) dataChannel.close();
+      if (pc) pc.close();
+      if (ws) ws.close();
       
-      // Reset state
-      dataChannel = null;
-      pc = null;
-      ws = null;
-      selectedFile = null;
-      isTransferring = false;
-      receivedChunks = [];
-      fileMetadata = null;
-      
-      // Reset UI
+      resetState();
       document.getElementById('chat').value = '';
       document.getElementById('msgBox').value = '';
-      document.getElementById('downloadLink').innerHTML = '';
       hideProgress();
       
       showSection('roleSelect');
     }
 
-    // Handle OTP input with backspace
+    // Enhanced OTP input handling
     document.addEventListener('DOMContentLoaded', function() {
       for (let i = 0; i < 6; i++) {
         const input = document.getElementById(`otp${i}`);
@@ -1053,31 +1658,46 @@
             }
           });
           
-          // Only allow numbers
           input.addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '');
             if (this.value.length > 1) {
               this.value = this.value.slice(0, 1);
             }
           });
+          
+          input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const digits = paste.replace(/[^0-9]/g, '').slice(0, 6);
+            
+            for (let j = 0; j < digits.length && (i + j) < 6; j++) {
+              document.getElementById(`otp${i + j}`).value = digits[j];
+            }
+            
+            if (digits.length === 6) {
+              setTimeout(submitOtp, 300);
+            }
+          });
         }
       }
+      
+      // Initialize file selection states
+      resetState();
     });
 
-    // Add some welcome messages when page loads
-    window.addEventListener('load', function() {
-      // Add a subtle animation to role cards
-      const roleCards = document.querySelectorAll('.role-card');
-      roleCards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
-        card.style.animation = 'slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
-      });
-    });
-
-    // Handle connection errors gracefully
+    // Performance optimizations
     window.addEventListener('beforeunload', function() {
       if (ws) ws.close();
       if (pc) pc.close();
+    });
+
+    // Add smooth animations for role cards
+    window.addEventListener('load', function() {
+      const roleCards = document.querySelectorAll('.role-card');
+      roleCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.style.animation = 'slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
+      });
     });
   </script>
 </body>
