@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2P File Transfer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .otp-display {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            font-size: 3rem;
+            font-weight: bold;
+            letter-spacing: 8px;
+            color: #495057;
+            font-family: 'Courier New', monospace;
+        }
+
+        .otp-input {
+            font-size: 2rem;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            text-align: center;
+            letter-spacing: 5px;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.waiting {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .file-drop-zone {
+            border: 3px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .file-drop-zone.drag-over {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .file-drop-zone:hover {
+            border-color: #667eea;
+            background: #f0f8ff;
+        }
+
+        .progress-container {
+            width: 100%;
+            background: #f0f0f0;
+            border-radius: 25px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 25px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            margin: 10px 0;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .file-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .file-info strong {
+            color: #1976d2;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .connection-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .speed-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            .otp-display {
+                font-size: 2rem;
+                letter-spacing: 4px;
+            }
+            
+            .otp-input {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📁🔄📁</div>
+        <h1>P2P File Transfer</h1>
+        <p class="subtitle">Direct device-to-device sharing up to 5GB</p>
+
+        <!-- Home Screen -->
+        <div id="homeScreen">
+            <button class="btn" onclick="startSending()">📤 Send File</button>
+            <button class="btn" onclick="startReceiving()">📥 Receive File</button>
+            <div class="connection-info">
+                <strong>🔒 Privacy First:</strong> Files transfer directly between your devices. Nothing is stored on our servers!
+            </div>
+        </div>
+
+        <!-- Send Screen -->
+        <div id="sendScreen" class="hidden">
+            <h2>📤 Send File</h2>
+            <div id="otpDisplay" class="otp-display hidden"></div>
+            <div id="sendStatus" class="status waiting">
+                Generating OTP...
+            </div>
+            <button class="btn" onclick="goHome()">← Back</button>
+        </div>
+
+        <!-- Receive Screen -->
+        <div id="receiveScreen" class="hidden">
+            <h2>📥 Receive File</h2>
+            <input type="text" id="otpInput" class="otp-input" placeholder="000000" maxlength="6">
+            <button class="btn" onclick="validateOTP()">Connect</button>
+            <div id="receiveStatus" class="status waiting hidden">
+                Validating OTP...
+            </div>
+            <button class="btn" onclick="goHome()">← Back</button>
+        </div>
+
+        <!-- File Transfer Screen -->
+        <div id="transferScreen" class="hidden">
+            <h2 id="transferTitle">File Transfer</h2>
+            
+            <!-- File Selection (Sender) -->
+            <div id="fileSelection" class="hidden">
+                <div class="file-drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                    <div>📁 Click to select file or drag & drop</div>
+                    <div style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                        Maximum size: 5GB
+                    </div>
+                </div>
+                <input type="file" id="fileInput" style="display: none;">
+            </div>
+
+            <!-- File Info -->
+            <div id="fileInfo" class="file-info hidden"></div>
+
+            <!-- Progress -->
+            <div id="progressSection" class="hidden">
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">0%</div>
+                <div class="speed-info">
+                    <span id="speedText">Speed: 0 MB/s</span>
+                    <span id="timeText">Time: 0s</span>
+                </div>
+            </div>
+
+            <div id="transferStatus" class="status waiting">
+                Waiting for connection...
+            </div>
+
+            <button class="btn" onclick="goHome()">← Home</button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let ws = null;
+        let pc = null;
+        let dataChannel = null;
+        let isReceiver = false;
+        let currentFile = null;
+        let receivedChunks = [];
+        let totalChunks = 0;
+        let receivedSize = 0;
+        let startTime = 0;
+        let sessionId = null;
+        let userId = null;
+
+        // WebRTC configuration
+        const rtcConfig = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+        };
+
+        // Utility functions
+        function showScreen(screenId) {
+            const screens = ['homeScreen', 'sendScreen', 'receiveScreen', 'transferScreen'];
+            screens.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function updateStatus(elementId, message, className = 'waiting') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `status ${className}`;
+            element.classList.remove('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function formatSpeed(bytesPerSecond) {
+            if (bytesPerSecond === 0) return '0 MB/s';
+            const mbps = bytesPerSecond / (1024 * 1024);
+            return mbps.toFixed(2) + ' MB/s';
+        }
+
+        function formatTime(seconds) {
+            if (seconds < 60) return seconds.toFixed(0) + 's';
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}m ${remainingSeconds}s`;
+        }
+
+        // Navigation functions
+        function goHome() {
+            // Clean up connections
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+            if (pc) {
+                pc.close();
+                pc = null;
+            }
+            
+            // Reset state
+            dataChannel = null;
+            isReceiver = false;
+            currentFile = null;
+            receivedChunks = [];
+            totalChunks = 0;
+            receivedSize = 0;
+            sessionId = null;
+            userId = null;
+            
+            showScreen('homeScreen');
+        }
+
+        // Send file flow
+        async function startSending() {
+            showScreen('sendScreen');
+            isReceiver = false;
+            
+            try {
+                const response = await fetch('/generate-otp', { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    sessionId = data.session_id;
+                    document.getElementById('otpDisplay').textContent = data.otp;
+                    document.getElementById('otpDisplay').classList.remove('hidden');
+                    updateStatus('sendStatus', 'Share this OTP with the receiver', 'connected');
+                    
+                    // Start WebSocket connection
+                    connectWebSocket();
+                } else {
+                    updateStatus('sendStatus', 'Failed to generate OTP', 'error');
+                }
+            } catch (error) {
+                updateStatus('sendStatus', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        // Receive file flow
+        function startReceiving() {
+            showScreen('receiveScreen');
+            isReceiver = true;
+        }
+
+        async function validateOTP() {
+            const otp = document.getElementById('otpInput').value;
+            if (otp.length !== 6) {
+                updateStatus('receiveStatus', 'Please enter 6-digit OTP', 'error');
+                return;
+            }
+
+            updateStatus('receiveStatus', 'Validating OTP...', 'waiting');
+
+            try {
+                const response = await fetch('/validate-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otp: otp })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    sessionId = data.session_id;
+                    userId = data.user_id;
+                    updateStatus('receiveStatus', 'OTP validated! Connecting...', 'connected');
+                    
+                    // Move to transfer screen and connect
+                    showScreen('transferScreen');
+                    document.getElementById('transferTitle').textContent = '📥 Receive File';
+                    connectWebSocket();
+                } else {
+                    updateStatus('receiveStatus', data.message, 'error');
+                }
+            } catch (error) {
+                updateStatus('receiveStatus', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        // WebSocket connection
+        function connectWebSocket() {
+            if (!sessionId) return;
+            
+            if (!userId) userId = 'user_' + Math.random().toString(36).substr(2, 9);
+            
+            const wsUrl = `ws://${window.location.host}/ws/${sessionId}/${userId}`;
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+            };
+            
+            ws.onmessage = async (event) => {
+                const message = JSON.parse(event.data);
+                console.log('WebSocket message:', message);
+                console.log('Message type : ' , message.type) ; 
+                switch (message.type) {
+                    case 'connected':
+                        handleWebSocketConnected(message);
+                        break;
+                    case 'offer':
+                        await handleWebRTCOffer(message.data);
+                        break;
+                    case 'answer':
+                        await handleWebRTCAnswer(message.data);
+                        break;
+                    case 'ice-candidate':
+                        await handleIceCandidate(message.data);
+                        break;
+                    case 'file-info':
+                        handleFileInfo(message.data);
+                        break;
+                    case 'error':
+                        updateStatus('transferStatus', message.message, 'error');
+                        break;
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateStatus('transferStatus', 'Connection error', 'error');
+            };
+            
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                if (pc) {
+                    pc.close();
+                    pc = null;
+                }
+                updateStatus('transferStatus', 'Connection lost', 'error');
+            };
+        }
+
+        function handleWebSocketConnected(message) {
+            if (message.role === 'creator') {
+                // Sender - wait for receiver to connect
+                showScreen('transferScreen');
+                document.getElementById('transferTitle').textContent = '📤 Send File';
+                document.getElementById('fileSelection').classList.remove('hidden');
+                updateStatus('transferStatus', 'Waiting for receiver to connect...', 'waiting');
+                setupFileSelection();
+            } else if (message.role === 'joiner') {
+                // Receiver - both users connected, start WebRTC
+                updateStatus('transferStatus', 'Connected! Establishing P2P connection...', 'connected');
+                console.log("initilize web rtc .. ")
+                initializeWebRTC();
+            }
+            
+            if (message.users_count === 2) {
+                // Both users connected, start WebRTC
+                setTimeout(() => {
+                    initializeWebRTC();
+                }, 1000);
+            }
+        }
+
+        // WebRTC functions
+        async function initializeWebRTC() {
+            try {
+                console.log('step 1') ;
+                pc = new RTCPeerConnection(rtcConfig);
+                console.log('step 2') ;
+                pc.onicecandidate = (event) => {
+                    if (event.candidate && ws) {
+                        ws.send(JSON.stringify({
+                            type: 'ice-candidate',
+                            data: event.candidate
+                        }));
+                    }
+                };
+                console.log('step 3') ;
+                pc.ondatachannel = (event) => {
+                    const channel = event.channel;
+                    setupDataChannel(channel);
+                };
+                console.log('step 4') ;
+                pc.onconnectionstatechange = () => {
+                    console.log('Connection state:', pc.connectionState);
+                    if (pc.connectionState === 'connected') {
+                        updateStatus('transferStatus', 'P2P connection established! 🎉', 'connected');
+                    } else if (pc.connectionState === 'failed') {
+                        updateStatus('transferStatus', 'P2P connection failed', 'error');
+                    }
+                };
+                console.log('step 5') ;
+                if (!isReceiver) {
+                    // Sender creates data channel
+                    console.log('step 6') ;
+                    dataChannel = pc.createDataChannel('fileTransfer', {
+                        ordered: true,
+                        maxRetransmits: 3
+                    });
+                    console.log('step 7') ;
+                    setupDataChannel(dataChannel);
+                    
+                    // Create offer
+                    const offer = await pc.createOffer();
+                    await pc.setLocalDescription(offer);
+                    
+                    ws.send(JSON.stringify({
+                        type: 'offer',
+                        data: offer
+                    }));
+                }
+                
+            } catch (error) {
+                console.error('WebRTC initialization error:', error);
+                updateStatus('transferStatus', 'Failed to initialize P2P connection', 'error');
+            }
+        }
+
+        async function handleWebRTCOffer(offer) {
+            try {
+                await pc.setRemoteDescription(offer);
+                const answer = await pc.createAnswer();
+                await pc.setLocalDescription(answer);
+                
+                ws.send(JSON.stringify({
+                    type: 'answer',
+                    data: answer
+                }));
+            } catch (error) {
+                console.error('Error handling offer:', error);
+            }
+        }
+
+        async function handleWebRTCAnswer(answer) {
+            try {
+                await pc.setRemoteDescription(answer);
+            } catch (error) {
+                console.error('Error handling answer:', error);
+            }
+        }
+
+        async function handleIceCandidate(candidate) {
+            try {
+                await pc.addIceCandidate(candidate);
+            } catch (error) {
+                console.error('Error adding ICE candidate:', error);
+            }
+        }
+
+        // Data channel setup
+        function setupDataChannel(channel) {
+            dataChannel = channel;
+            
+            channel.onopen = () => {
+                console.log('Data channel opened');
+                updateStatus('transferStatus', 'Ready for file transfer! 🚀', 'connected');
+                
+                if (!isReceiver && currentFile) {
+                    // Auto-start transfer if file is already selected
+                    startFileTransfer();
+                }
+            };
+            
+            channel.onclose = () => {
+                console.log('Data channel closed');
+                updateStatus('transferStatus', 'Transfer connection closed', 'waiting');
+            };
+            
+            channel.onerror = (error) => {
+                console.error('Data channel error:', error);
+                updateStatus('transferStatus', 'Transfer error occurred', 'error');
+            };
+            
+            channel.onmessage = (event) => {
+                handleDataChannelMessage(event.data);
+            };
+        }
+
+        // File selection setup
+        function setupFileSelection() {
+            const fileInput = document.getElementById('fileInput');
+            const dropZone = document.getElementById('dropZone');
+            
+            fileInput.onchange = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    handleFileSelected(file);
+                }
+            };
+            
+            dropZone.ondragover = (event) => {
+                event.preventDefault();
+                dropZone.classList.add('drag-over');
+            };
+            
+            dropZone.ondragleave = () => {
+                dropZone.classList.remove('drag-over');
+            };
+            
+            dropZone.ondrop = (event) => {
+                event.preventDefault();
+                dropZone.classList.remove('drag-over');
+                const file = event.dataTransfer.files[0];
+                if (file) {
+                    handleFileSelected(file);
+                }
+            };
+        }
+
+        function handleFileSelected(file) {
+            const maxSize = 5 * 1024 * 1024 * 1024; // 5GB
+            if (file.size > maxSize) {
+                updateStatus('transferStatus', 'File too large! Maximum size is 5GB', 'error');
+                return;
+            }
+            
+            currentFile = file;
+            
+            // Show file info
+            const fileInfo = document.getElementById('fileInfo');
+            fileInfo.innerHTML = `
+                <strong>Selected File:</strong><br>
+                📄 <strong>Name:</strong> ${file.name}<br>
+                📊 <strong>Size:</strong> ${formatFileSize(file.size)}<br>
+                📅 <strong>Type:</strong> ${file.type || 'Unknown'}<br>
+                📝 <strong>Modified:</strong> ${new Date(file.lastModified).toLocaleString()}
+            `;
+            fileInfo.classList.remove('hidden');
+            
+            document.getElementById('fileSelection').classList.add('hidden');
+            
+            if (dataChannel && dataChannel.readyState === 'open') {
+                startFileTransfer();
+            } else {
+                updateStatus('transferStatus', 'File selected. Waiting for P2P connection...', 'waiting');
+            }
+        }
+
+        // File transfer functions
+        function startFileTransfer() {
+            if (!currentFile || !dataChannel) return;
+            
+            const chunkSize = 64 * 1024; // 64KB chunks
+            totalChunks = Math.ceil(currentFile.size / chunkSize);
+            let sentChunks = 0;
+            startTime = Date.now();
+            
+            // Send file metadata
+            const fileInfo = {
+                name: currentFile.name,
+                size: currentFile.size,
+                type: currentFile.type,
+                chunks: totalChunks,
+                chunkSize: chunkSize
+            };
+            
+            dataChannel.send(JSON.stringify({
+                type: 'file-start',
+                data: fileInfo
+            }));
+            
+            // Show progress
+            document.getElementById('progressSection').classList.remove('hidden');
+            updateStatus('transferStatus', 'Sending file...', 'waiting');
+            
+            // Send file in chunks
+            const reader = new FileReader();
+            let offset = 0;
+            
+            const sendNextChunk = () => {
+                if (offset >= currentFile.size) {
+                    // Transfer complete
+                    dataChannel.send(JSON.stringify({
+                        type: 'file-complete'
+                    }));
+                    updateStatus('transferStatus', 'File sent successfully! 🎉', 'connected');
+                    return;
+                }
+                
+                const chunk = currentFile.slice(offset, offset + chunkSize);
+                reader.onload = (e) => {
+                    const chunkData = {
+                        type: 'file-chunk',
+                        data: {
+                            index: sentChunks,
+                            data: Array.from(new Uint8Array(e.target.result))
+                        }
+                    };
+                    
+                    dataChannel.send(JSON.stringify(chunkData));
+                    
+                    sentChunks++;
+                    offset += chunkSize;
+                    
+                    // Update progress
+                    const progress = (sentChunks / totalChunks) * 100;
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    const speed = (sentChunks * chunkSize) / elapsed;
+                    const remainingChunks = totalChunks - sentChunks;
+                    const eta = remainingChunks > 0 ? (remainingChunks * chunkSize) / speed : 0;
+                    
+                    updateProgress(progress, speed, eta);
+                    
+                    // Send next chunk
+                    setTimeout(sendNextChunk, 10); // Small delay to prevent overwhelming
+                };
+                reader.readAsArrayBuffer(chunk);
+            };
+            
+            sendNextChunk();
+        }
+
+        function handleDataChannelMessage(data) {
+            try {
+                const message = JSON.parse(data);
+                
+                switch (message.type) {
+                    case 'file-start':
+                        handleFileStart(message.data);
+                        break;
+                    case 'file-chunk':
+                        handleFileChunk(message.data);
+                        break;
+                    case 'file-complete':
+                        handleFileComplete();
+                        break;
+                }
+            } catch (error) {
+                console.error('Error handling data channel message:', error);
+            }
+        }
+
+        function handleFileStart(fileInfo) {
+            console.log('Receiving file:', fileInfo);
+            
+            totalChunks = fileInfo.chunks;
+            receivedChunks = new Array(totalChunks);
+            receivedSize = 0;
+            startTime = Date.now();
+            
+            // Show file info
+            const fileInfoElement = document.getElementById('fileInfo');
+            fileInfoElement.innerHTML = `
+                <strong>Incoming File:</strong><br>
+                📄 <strong>Name:</strong> ${fileInfo.name}<br>
+                📊 <strong>Size:</strong> ${formatFileSize(fileInfo.size)}<br>
+                📝 <strong>Type:</strong> ${fileInfo.type || 'Unknown'}
+            `;
+            fileInfoElement.classList.remove('hidden');
+            
+            // Show progress
+            document.getElementById('progressSection').classList.remove('hidden');
+            updateStatus('transferStatus', 'Receiving file...', 'waiting');
+        }
+
+        function handleFileChunk(chunkData) {
+            const { index, data } = chunkData;
+            receivedChunks[index] = new Uint8Array(data);
+            receivedSize += data.length;
+            
+            // Update progress
+            const receivedCount = receivedChunks.filter(chunk => chunk !== undefined).length;
+            const progress = (receivedCount / totalChunks) * 100;
+            const elapsed = (Date.now() - startTime) / 1000;
+            const speed = receivedSize / elapsed;
+            const remainingSize = (totalChunks - receivedCount) * data.length;
+            const eta = remainingSize > 0 ? remainingSize / speed : 0;
+            
+            updateProgress(progress, speed, eta);
+        }
+
+        function handleFileComplete() {
+            // Combine all chunks into a single file
+            const chunks = receivedChunks.filter(chunk => chunk !== undefined);
+            const fileData = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+            
+            let offset = 0;
+            chunks.forEach(chunk => {
+                fileData.set(chunk, offset);
+                offset += chunk.length;
+            });
+            
+            // Create download
+            const blob = new Blob([fileData]);
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'received_file'; // You might want to store the original filename
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            updateStatus('transferStatus', 'File received successfully! 🎉', 'connected');
+        }
+
+        function updateProgress(percentage, speed, eta) {
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = percentage.toFixed(1) + '%';
+            document.getElementById('speedText').textContent = 'Speed: ' + formatSpeed(speed);
+            document.getElementById('timeText').textContent = 'ETA: ' + formatTime(eta);
+        }
+
+        function handleFileInfo(data) {
+            // Handle file info messages if needed
+            console.log('File info:', data);
+        }
+
+        // Initialize drag and drop prevention on document
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+        });
+
+        // OTP input formatting
+        document.getElementById('otpInput').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 6) value = value.substr(0, 6);
+            e.target.value = value;
+        });
+
+        // Auto-connect when 6 digits are entered
+        document.getElementById('otpInput').addEventListener('keyup', function(e) {
+            if (e.target.value.length === 6 && e.key === 'Enter') {
+                validateOTP();
+            }
+        });
+
+        console.log('P2P File Transfer App Loaded');
+    </script>
+</body>
+</html>
