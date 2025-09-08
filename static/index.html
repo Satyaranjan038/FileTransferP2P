@@ -697,11 +697,13 @@
 
     function beCreator() {
       role = "creator";
-    //   ws = new WebSocket("ws://localhost:8000/ws/creator");
+      // ws = new WebSocket("ws://localhost:8000/ws/creator");
+       ws = new WebSocket("wss://filetransferp2p.onrender.com/ws/creator");
+
     // Detect protocol: ws:// for http, wss:// for https
-    const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-    const host = window.location.host; // works both locally and on Render
-    const ws = new WebSocket(`${protocol}${host}/ws/creator`);
+    // const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    // const host = window.location.host; // works both locally and on Render
+    // const ws = new WebSocket(`${protocol}${host}/ws/creator`);
 
       setupWs();
       showSection('otpSection');
@@ -722,11 +724,13 @@
         return;
       }
 
-    //   ws = new WebSocket("ws://localhost:8000/ws/joiner");
+      // ws = new WebSocket("ws://localhost:8000/ws/joiner");
+       ws = new WebSocket("wss://filetransferp2p.onrender.com/ws/joiner");
+
     // Detect protocol: ws:// for http, wss:// for https
-        const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        const host = window.location.host; // works both locally and on Render
-        const ws = new WebSocket(`${protocol}${host}/ws/joiner`);
+        // const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+        // const host = window.location.host; // works both locally and on Render
+        // const ws = new WebSocket(`${protocol}${host}/ws/joiner`);
 
       ws.onopen = () => {
         ws.send(JSON.stringify({ otp: otp }));
