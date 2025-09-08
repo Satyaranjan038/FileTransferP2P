@@ -1,893 +1,1080 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P2P File Transfer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecureShare - P2P File Transfer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-        }
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #ec4899;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --dark: #1f2937;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-alt: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
 
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            text-align: center;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gradient);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-        .logo {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="20" cy="20" r="2" fill="url(%23a)"/><circle cx="80" cy="20" r="3" fill="url(%23a)"/><circle cx="40" cy="40" r="1" fill="url(%23a)"/><circle cx="90" cy="60" r="2" fill="url(%23a)"/><circle cx="10" cy="80" r="1" fill="url(%23a)"/></svg>') repeat;
+      animation: float 20s ease-in-out infinite;
+    }
 
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2rem;
-        }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
 
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      width: 100%;
+      max-width: 900px;
+      position: relative;
+      z-index: 1;
+    }
 
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s ease;
-            min-width: 200px;
-        }
+    .header {
+      background: var(--gradient);
+      padding: 32px;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    }
 
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-        .otp-display {
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 15px;
-            padding: 30px;
-            margin: 20px 0;
-            font-size: 3rem;
-            font-weight: bold;
-            letter-spacing: 8px;
-            color: #495057;
-            font-family: 'Courier New', monospace;
-        }
+    .tagline {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
 
-        .otp-input {
-            font-size: 2rem;
-            padding: 15px;
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            text-align: center;
-            letter-spacing: 5px;
-            font-family: 'Courier New', monospace;
-            width: 100%;
-            margin: 20px 0;
-        }
+    .main-content {
+      padding: 40px;
+    }
 
-        .status {
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-weight: 500;
-        }
+    .section {
+      display: none;
+      animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
 
-        .status.connected {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+    .section.active {
+      display: block;
+    }
 
-        .status.waiting {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+    .role-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
 
-        .file-drop-zone {
-            border: 3px dashed #dee2e6;
-            border-radius: 15px;
-            padding: 40px;
-            margin: 20px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
+    .role-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+      overflow: hidden;
+    }
 
-        .file-drop-zone.drag-over {
-            border-color: #667eea;
-            background: #e3f2fd;
-        }
+    .role-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.6s;
+    }
 
-        .file-drop-zone:hover {
-            border-color: #667eea;
-            background: #f0f8ff;
-        }
+    .role-card:hover::before {
+      left: 100%;
+    }
 
-        .progress-container {
-            width: 100%;
-            background: #f0f0f0;
-            border-radius: 25px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
+    .role-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
 
-        .progress-bar {
-            height: 20px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 25px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
+    .role-card.sender:hover {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(99, 102, 241, 0.1));
+    }
 
-        .progress-text {
-            margin: 10px 0;
-            font-weight: 500;
-            color: #666;
-        }
+    .role-card.receiver:hover {
+      border-color: var(--secondary);
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.05), rgba(236, 72, 153, 0.1));
+    }
 
-        .file-info {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: left;
-        }
+    .role-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: block;
+    }
 
-        .file-info strong {
-            color: #1976d2;
-        }
+    .role-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
 
-        .hidden {
-            display: none;
-        }
+    .role-desc {
+      color: var(--gray);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
 
-        .connection-info {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            font-size: 0.9rem;
-            color: #666;
-            line-height: 1.6;
-        }
+    .otp-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
 
-        .speed-info {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-size: 0.9rem;
-            color: #666;
-        }
+    .otp-label {
+      font-size: 1.1rem;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-                margin: 20px;
-            }
-            
-            .otp-display {
-                font-size: 2rem;
-                letter-spacing: 4px;
-            }
-            
-            .otp-input {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    .otp-display {
+      background: var(--gradient);
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 8px;
+      padding: 24px 32px;
+      border-radius: 16px;
+      margin: 16px 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .otp-display::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    .otp-input-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .otp-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .otp-input {
+      width: 56px;
+      height: 64px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .otp-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+      transform: scale(1.05);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.6s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn.secondary {
+      background: var(--secondary);
+    }
+
+    .btn.secondary:hover {
+      background: #db2777;
+    }
+
+    .connected-section {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .connection-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    .transfer-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .transfer-panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .panel-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-area {
+      height: 200px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Inter', monospace;
+      font-size: 0.9rem;
+      resize: none;
+      background: #f8fafc;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .chat-input input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .file-upload {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 32px 16px;
+      text-align: center;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background: #f8fafc;
+    }
+
+    .file-upload:hover {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .file-upload.drag-over {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+      transform: scale(1.02);
+    }
+
+    .file-icon {
+      font-size: 2.5rem;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+
+    .progress-container {
+      margin: 16px 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      position: relative;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: progress-shine 2s infinite;
+    }
+
+    @keyframes progress-shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+
+    .download-link {
+      background: var(--success);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .download-link:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .back-btn {
+      background: var(--gray);
+      margin-right: 16px;
+    }
+
+    .back-btn:hover {
+      background: #475569;
+    }
+
+    .status-message {
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+      font-weight: 500;
+    }
+
+    .status-success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--error);
+    }
+
+    .status-info {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      color: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        border-radius: 0;
+        min-height: 100vh;
+      }
+
+      .header {
+        padding: 24px 20px;
+      }
+
+      .main-content {
+        padding: 24px 20px;
+      }
+
+      .role-selector {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .transfer-section {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .otp-display {
+        font-size: 2rem;
+        letter-spacing: 4px;
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">📁🔄📁</div>
-        <h1>P2P File Transfer</h1>
-        <p class="subtitle">Direct device-to-device sharing up to 5GB</p>
-
-        <!-- Home Screen -->
-        <div id="homeScreen">
-            <button class="btn" onclick="startSending()">📤 Send File</button>
-            <button class="btn" onclick="startReceiving()">📥 Receive File</button>
-            <div class="connection-info">
-                <strong>🔒 Privacy First:</strong> Files transfer directly between your devices. Nothing is stored on our servers!
-            </div>
-        </div>
-
-        <!-- Send Screen -->
-        <div id="sendScreen" class="hidden">
-            <h2>📤 Send File</h2>
-            <div id="otpDisplay" class="otp-display hidden"></div>
-            <div id="sendStatus" class="status waiting">
-                Generating OTP...
-            </div>
-            <button class="btn" onclick="goHome()">← Back</button>
-        </div>
-
-        <!-- Receive Screen -->
-        <div id="receiveScreen" class="hidden">
-            <h2>📥 Receive File</h2>
-            <input type="text" id="otpInput" class="otp-input" placeholder="000000" maxlength="6">
-            <button class="btn" onclick="validateOTP()">Connect</button>
-            <div id="receiveStatus" class="status waiting hidden">
-                Validating OTP...
-            </div>
-            <button class="btn" onclick="goHome()">← Back</button>
-        </div>
-
-        <!-- File Transfer Screen -->
-        <div id="transferScreen" class="hidden">
-            <h2 id="transferTitle">File Transfer</h2>
-            
-            <!-- File Selection (Sender) -->
-            <div id="fileSelection" class="hidden">
-                <div class="file-drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-                    <div>📁 Click to select file or drag & drop</div>
-                    <div style="font-size: 0.9rem; color: #666; margin-top: 10px;">
-                        Maximum size: 5GB
-                    </div>
-                </div>
-                <input type="file" id="fileInput" style="display: none;">
-            </div>
-
-            <!-- File Info -->
-            <div id="fileInfo" class="file-info hidden"></div>
-
-            <!-- Progress -->
-            <div id="progressSection" class="hidden">
-                <div class="progress-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="progress-text" id="progressText">0%</div>
-                <div class="speed-info">
-                    <span id="speedText">Speed: 0 MB/s</span>
-                    <span id="timeText">Time: 0s</span>
-                </div>
-            </div>
-
-            <div id="transferStatus" class="status waiting">
-                Waiting for connection...
-            </div>
-
-            <button class="btn" onclick="goHome()">← Home</button>
-        </div>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🚀 SecureShare</div>
+      <div class="tagline">Secure Peer-to-Peer File Transfer</div>
     </div>
 
-    <script>
-        // Global variables
-        let ws = null;
-        let pc = null;
-        let dataChannel = null;
-        let isReceiver = false;
-        let currentFile = null;
-        let receivedChunks = [];
-        let totalChunks = 0;
-        let receivedSize = 0;
-        let startTime = 0;
-        let sessionId = null;
-        let userId = null;
+    <div class="main-content">
+      <!-- Role Selection -->
+      <div id="roleSelect" class="section active">
+        <div class="role-selector">
+          <div class="role-card sender" onclick="beCreator()">
+            <div class="role-icon">📤</div>
+            <div class="role-title">I'm Sending</div>
+            <div class="role-desc">Generate a secure code and share files with someone</div>
+          </div>
+          <div class="role-card receiver" onclick="beJoiner()">
+            <div class="role-icon">📥</div>
+            <div class="role-title">I'm Receiving</div>
+            <div class="role-desc">Enter the code to receive files securely</div>
+          </div>
+        </div>
+      </div>
 
-        // WebRTC configuration
-        const rtcConfig = {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' }
-            ]
-        };
+      <!-- OTP Generation -->
+      <div id="otpSection" class="section">
+        <div class="otp-section">
+          <div class="otp-label">Share this secure code with the receiver:</div>
+          <div class="otp-display" id="otpCode">------</div>
+          <div style="color: var(--gray); font-size: 0.9rem;">⏱️ Code expires in 10 minutes</div>
+        </div>
+        <div style="text-align: center;">
+          <button class="btn back-btn" onclick="goBack()">← Back</button>
+          <div class="status-message status-info">Waiting for receiver to connect...</div>
+        </div>
+      </div>
 
-        // Utility functions
-        function showScreen(screenId) {
-            const screens = ['homeScreen', 'sendScreen', 'receiveScreen', 'transferScreen'];
-            screens.forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(screenId).classList.remove('hidden');
-        }
+      <!-- OTP Input -->
+      <div id="joinSection" class="section">
+        <div class="otp-input-section">
+          <div class="otp-label">Enter the 6-digit secure code:</div>
+          <div class="otp-inputs">
+            <input type="text" maxlength="1" class="otp-input" id="otp0" oninput="nextInput(0)">
+            <input type="text" maxlength="1" class="otp-input" id="otp1" oninput="nextInput(1)">
+            <input type="text" maxlength="1" class="otp-input" id="otp2" oninput="nextInput(2)">
+            <input type="text" maxlength="1" class="otp-input" id="otp3" oninput="nextInput(3)">
+            <input type="text" maxlength="1" class="otp-input" id="otp4" oninput="nextInput(4)">
+            <input type="text" maxlength="1" class="otp-input" id="otp5" oninput="nextInput(5)">
+          </div>
+          <div style="text-align: center;">
+            <button class="btn back-btn" onclick="goBack()">← Back</button>
+            <button class="btn secondary" onclick="submitOtp()">🔗 Connect</button>
+          </div>
+          <div id="joinStatus"></div>
+        </div>
+      </div>
 
-        function updateStatus(elementId, message, className = 'waiting') {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = `status ${className}`;
-            element.classList.remove('hidden');
-        }
+      <!-- Connected State -->
+      <div id="connectedSection" class="section">
+        <div class="connected-section">
+          <div class="connection-status">
+            <div class="status-dot"></div>
+            <span>🔒 Securely Connected</span>
+          </div>
+        </div>
 
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
+        <div class="transfer-section">
+          <!-- Chat Panel -->
+          <div class="transfer-panel">
+            <div class="panel-title">💬 Chat</div>
+            <textarea id="chat" class="chat-area" placeholder="Messages will appear here..." readonly></textarea>
+            <div class="chat-input">
+              <input id="msgBox" type="text" placeholder="Type a message..." onkeypress="handleEnter(event)">
+              <button class="btn" onclick="sendMsg()">Send</button>
+            </div>
+          </div>
 
-        function formatSpeed(bytesPerSecond) {
-            if (bytesPerSecond === 0) return '0 MB/s';
-            const mbps = bytesPerSecond / (1024 * 1024);
-            return mbps.toFixed(2) + ' MB/s';
-        }
-
-        function formatTime(seconds) {
-            if (seconds < 60) return seconds.toFixed(0) + 's';
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = Math.floor(seconds % 60);
-            return `${minutes}m ${remainingSeconds}s`;
-        }
-
-        // Navigation functions
-        function goHome() {
-            // Clean up connections
-            if (ws) {
-                ws.close();
-                ws = null;
-            }
-            if (pc) {
-                pc.close();
-                pc = null;
-            }
+          <!-- File Transfer Panel -->
+          <div class="transfer-panel">
+            <div class="panel-title">📁 File Transfer</div>
+            <div class="file-upload" onclick="document.getElementById('fileInput').click()" 
+                 ondrop="handleDrop(event)" ondragover="handleDragOver(event)" 
+                 ondragleave="handleDragLeave(event)">
+              <div class="file-icon">📄</div>
+              <div style="font-weight: 600; margin-bottom: 4px;">Click to select or drag files here</div>
+              <div style="color: var(--gray); font-size: 0.9rem;">Supports any file type, any size</div>
+            </div>
+            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect()">
+            <button class="btn" onclick="sendFile()" id="sendFileBtn" style="width: 100%;" disabled>
+              📤 Send File
+            </button>
             
-            // Reset state
-            dataChannel = null;
-            isReceiver = false;
-            currentFile = null;
+            <div id="progressContainer" class="progress-container" style="display: none;">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-text">
+                <span id="progressText">Preparing...</span>
+                <span id="progressPercent">0%</span>
+              </div>
+            </div>
+
+            <div id="downloadLink"></div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px;">
+          <button class="btn back-btn" onclick="disconnect()">❌ Disconnect</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let ws, pc, dataChannel;
+    let role;
+    let receivedChunks = [];
+    let fileMetadata = null;
+    let selectedFile = null;
+    let isTransferring = false;
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    function goBack() {
+      showSection('roleSelect');
+      if (ws) ws.close();
+    }
+
+    function beCreator() {
+      role = "creator";
+    //   ws = new WebSocket("ws://localhost:8000/ws/creator");
+    // Detect protocol: ws:// for http, wss:// for https
+    const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    const host = window.location.host; // works both locally and on Render
+    const ws = new WebSocket(`${protocol}${host}/ws/creator`);
+
+      setupWs();
+      showSection('otpSection');
+    }
+
+    function beJoiner() {
+      role = "joiner";
+      showSection('joinSection');
+      setTimeout(() => document.getElementById('otp0').focus(), 100);
+    }
+
+    function submitOtp() {
+      const otp = Array.from({length: 6}, (_, i) => 
+        document.getElementById(`otp${i}`).value).join('');
+      
+      if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+        showStatus('Enter a valid 6-digit code', 'error', 'joinStatus');
+        return;
+      }
+
+    //   ws = new WebSocket("ws://localhost:8000/ws/joiner");
+    // Detect protocol: ws:// for http, wss:// for https
+        const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+        const host = window.location.host; // works both locally and on Render
+        const ws = new WebSocket(`${protocol}${host}/ws/joiner`);
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ otp: otp }));
+      };
+      setupWs();
+      showStatus('Connecting...', 'info', 'joinStatus');
+    }
+
+    function setupWs() {
+      ws.onmessage = async (event) => {
+        const msg = JSON.parse(event.data);
+
+        if (msg.type === "otp") {
+          document.getElementById("otpCode").innerText = msg.otp;
+        } 
+        else if (msg.type === "connected") {
+          startWebRTC();
+          showSection('connectedSection');
+          showStatus('Connected! You can now chat and share files.', 'success', 'joinStatus');
+        } 
+        else if (msg.type === "offer") {
+          await pc.setRemoteDescription(msg);
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          ws.send(JSON.stringify(answer));
+        } 
+        else if (msg.type === "answer") {
+          await pc.setRemoteDescription(msg);
+        } 
+        else if (msg.type === "candidate") {
+          await pc.addIceCandidate(msg.candidate);
+        }
+        else if (msg.type === "error") {
+          showStatus(msg.message, 'error', 'joinStatus');
+        }
+      };
+
+      ws.onclose = () => {
+        showStatus('Connection lost', 'error', 'joinStatus');
+      };
+
+      ws.onerror = () => {
+        showStatus('Connection failed. Please try again.', 'error', 'joinStatus');
+      };
+    }
+
+    function startWebRTC() {
+      pc = new RTCPeerConnection({
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' }
+        ]
+      });
+
+      pc.onicecandidate = (event) => {
+        if (event.candidate) {
+          ws.send(JSON.stringify({ type: "candidate", candidate: event.candidate }));
+        }
+      };
+
+      pc.ondatachannel = (event) => {
+        dataChannel = event.channel;
+        setupDataChannel(dataChannel);
+      };
+
+      if (role === "creator") {
+        dataChannel = pc.createDataChannel("data");
+        setupDataChannel(dataChannel);
+        pc.createOffer().then(offer => {
+          pc.setLocalDescription(offer);
+          ws.send(JSON.stringify(offer));
+        });
+      }
+    }
+
+    function setupDataChannel(channel) {
+      channel.onopen = () => {
+        console.log("Data channel open");
+        addChatMessage("System", "🔒 Secure connection established!");
+      };
+      
+      channel.onmessage = (e) => handleDataMessage(e.data);
+      
+      channel.onerror = (error) => {
+        console.error("Data channel error:", error);
+        addChatMessage("System", "❌ Connection error occurred");
+      };
+    }
+
+    function handleDataMessage(data) {
+      if (typeof data === "string") {
+        try {
+          const obj = JSON.parse(data);
+          if (obj.type === "file-meta") {
+            fileMetadata = obj;
             receivedChunks = [];
-            totalChunks = 0;
-            receivedSize = 0;
-            sessionId = null;
-            userId = null;
-            
-            showScreen('homeScreen');
+            showProgress(0, `Receiving ${obj.name}`);
+            addChatMessage("System", `📥 Receiving file: ${obj.name} (${formatFileSize(obj.size)})`);
+          } else if (obj.type === "file-complete") {
+            completeFileReceive();
+          } else if (obj.type === "chat") {
+            addChatMessage("Peer", obj.msg);
+          }
+        } catch {
+          addChatMessage("Peer", data);
         }
-
-        // Send file flow
-        async function startSending() {
-            showScreen('sendScreen');
-            isReceiver = false;
-            
-            try {
-                const response = await fetch('/generate-otp', { method: 'POST' });
-                const data = await response.json();
-                
-                if (data.success) {
-                    sessionId = data.session_id;
-                    document.getElementById('otpDisplay').textContent = data.otp;
-                    document.getElementById('otpDisplay').classList.remove('hidden');
-                    updateStatus('sendStatus', 'Share this OTP with the receiver', 'connected');
-                    
-                    // Start WebSocket connection
-                    connectWebSocket();
-                } else {
-                    updateStatus('sendStatus', 'Failed to generate OTP', 'error');
-                }
-            } catch (error) {
-                updateStatus('sendStatus', 'Error: ' + error.message, 'error');
-            }
+      } else {
+        if (fileMetadata) {
+          receivedChunks.push(data);
+          const progress = (receivedChunks.length * 16 * 1024) / fileMetadata.size * 100;
+          showProgress(Math.min(progress, 100), `Receiving ${fileMetadata.name}`);
         }
+      }
+    }
 
-        // Receive file flow
-        function startReceiving() {
-            showScreen('receiveScreen');
-            isReceiver = true;
-        }
+    function completeFileReceive() {
+      const received = new Blob(receivedChunks);
+      const url = URL.createObjectURL(received);
+      document.getElementById("downloadLink").innerHTML =
+        `<a href="${url}" download="${fileMetadata.name}" class="download-link">
+          📥 Download ${fileMetadata.name}
+        </a>`;
+      
+      addChatMessage("System", `✅ File received: ${fileMetadata.name}`);
+      hideProgress();
+      receivedChunks = [];
+      fileMetadata = null;
+    }
 
-        async function validateOTP() {
-            const otp = document.getElementById('otpInput').value;
-            if (otp.length !== 6) {
-                updateStatus('receiveStatus', 'Please enter 6-digit OTP', 'error');
-                return;
-            }
+    function addChatMessage(sender, message) {
+      const chat = document.getElementById("chat");
+      const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      chat.value += `[${timestamp}] ${sender}: ${message}\n`;
+      chat.scrollTop = chat.scrollHeight;
+    }
 
-            updateStatus('receiveStatus', 'Validating OTP...', 'waiting');
+    function sendMsg() {
+      const msgBox = document.getElementById("msgBox");
+      const msg = msgBox.value.trim();
+      if (!msg || !dataChannel) return;
 
-            try {
-                const response = await fetch('/validate-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ otp: otp })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    sessionId = data.session_id;
-                    userId = data.user_id;
-                    updateStatus('receiveStatus', 'OTP validated! Connecting...', 'connected');
-                    
-                    // Move to transfer screen and connect
-                    showScreen('transferScreen');
-                    document.getElementById('transferTitle').textContent = '📥 Receive File';
-                    connectWebSocket();
-                } else {
-                    updateStatus('receiveStatus', data.message, 'error');
-                }
-            } catch (error) {
-                updateStatus('receiveStatus', 'Error: ' + error.message, 'error');
-            }
-        }
+      dataChannel.send(JSON.stringify({ type: "chat", msg }));
+      addChatMessage("You", msg);
+      msgBox.value = "";
+    }
 
-        // WebSocket connection
-        function connectWebSocket() {
-            if (!sessionId) return;
-            
-            if (!userId) userId = 'user_' + Math.random().toString(36).substr(2, 9);
-            
-            // const wsUrl = `ws://${window.location.host}/ws/${sessionId}/${userId}`;
-            const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-            const wsUrl = `${protocol}${window.location.host}/ws/${sessionId}/${userId}`;
+    function handleEnter(event) {
+      if (event.key === 'Enter') {
+        sendMsg();
+      }
+    }
 
-            ws = new WebSocket(wsUrl);
-            
-            ws.onopen = () => {
-                console.log('WebSocket connected');
-            };
-            
-            ws.onmessage = async (event) => {
-                const message = JSON.parse(event.data);
-                console.log('WebSocket message:', message);
-                console.log('Message type : ' , message.type) ; 
-                switch (message.type) {
-                    case 'connected':
-                        handleWebSocketConnected(message);
-                        break;
-                    case 'offer':
-                        await handleWebRTCOffer(message.data);
-                        break;
-                    case 'answer':
-                        await handleWebRTCAnswer(message.data);
-                        break;
-                    case 'ice-candidate':
-                        await handleIceCandidate(message.data);
-                        break;
-                    case 'file-info':
-                        handleFileInfo(message.data);
-                        break;
-                    case 'error':
-                        updateStatus('transferStatus', message.message, 'error');
-                        break;
-                }
-            };
-            
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-                updateStatus('transferStatus', 'Connection error', 'error');
-            };
-            
-            ws.onclose = () => {
-                console.log('WebSocket disconnected');
-                if (pc) {
-                    pc.close();
-                    pc = null;
-                }
-                updateStatus('transferStatus', 'Connection lost', 'error');
-            };
-        }
+    function handleFileSelect() {
+      const fileInput = document.getElementById('fileInput');
+      if (fileInput.files.length > 0) {
+        selectedFile = fileInput.files[0];
+        document.getElementById('sendFileBtn').disabled = false;
+        document.getElementById('sendFileBtn').innerHTML = `📤 Send ${selectedFile.name}`;
+      }
+    }
 
-        function handleWebSocketConnected(message) {
-            if (message.role === 'creator') {
-                // Sender - wait for receiver to connect
-                showScreen('transferScreen');
-                document.getElementById('transferTitle').textContent = '📤 Send File';
-                document.getElementById('fileSelection').classList.remove('hidden');
-                updateStatus('transferStatus', 'Waiting for receiver to connect...', 'waiting');
-                setupFileSelection();
-            } else if (message.role === 'joiner') {
-                // Receiver - both users connected, start WebRTC
-                updateStatus('transferStatus', 'Connected! Establishing P2P connection...', 'connected');
-                console.log("initilize web rtc .. ")
-                initializeWebRTC();
-            }
-            
-            if (message.users_count === 2) {
-                // Both users connected, start WebRTC
-                setTimeout(() => {
-                    initializeWebRTC();
-                }, 1000);
-            }
-        }
+    function handleDrop(event) {
+      event.preventDefault();
+      const fileUpload = event.currentTarget;
+      fileUpload.classList.remove('drag-over');
+      
+      const files = event.dataTransfer.files;
+      if (files.length > 0) {
+        selectedFile = files[0];
+        document.getElementById('sendFileBtn').disabled = false;
+        document.getElementById('sendFileBtn').innerHTML = `📤 Send ${selectedFile.name}`;
+      }
+    }
 
-        // WebRTC functions
-        async function initializeWebRTC() {
-            try {
-                console.log('step 1') ;
-                pc = new RTCPeerConnection(rtcConfig);
-                console.log('step 2') ;
-                pc.onicecandidate = (event) => {
-                    if (event.candidate && ws) {
-                        ws.send(JSON.stringify({
-                            type: 'ice-candidate',
-                            data: event.candidate
-                        }));
-                    }
-                };
-                console.log('step 3') ;
-                pc.ondatachannel = (event) => {
-                    const channel = event.channel;
-                    setupDataChannel(channel);
-                };
-                console.log('step 4') ;
-                pc.onconnectionstatechange = () => {
-                    console.log('Connection state:', pc.connectionState);
-                    if (pc.connectionState === 'connected') {
-                        updateStatus('transferStatus', 'P2P connection established! 🎉', 'connected');
-                    } else if (pc.connectionState === 'failed') {
-                        updateStatus('transferStatus', 'P2P connection failed', 'error');
-                    }
-                };
-                console.log('step 5') ;
-                if (!isReceiver) {
-                    // Sender creates data channel
-                    console.log('step 6') ;
-                    dataChannel = pc.createDataChannel('fileTransfer', {
-                        ordered: true,
-                        maxRetransmits: 3
-                    });
-                    console.log('step 7') ;
-                    setupDataChannel(dataChannel);
-                    
-                    // Create offer
-                    const offer = await pc.createOffer();
-                    await pc.setLocalDescription(offer);
-                    
-                    ws.send(JSON.stringify({
-                        type: 'offer',
-                        data: offer
-                    }));
-                }
-                
-            } catch (error) {
-                console.error('WebRTC initialization error:', error);
-                updateStatus('transferStatus', 'Failed to initialize P2P connection', 'error');
-            }
-        }
+    function handleDragOver(event) {
+      event.preventDefault();
+      event.currentTarget.classList.add('drag-over');
+    }
 
-        async function handleWebRTCOffer(offer) {
-            try {
-                await pc.setRemoteDescription(offer);
-                const answer = await pc.createAnswer();
-                await pc.setLocalDescription(answer);
-                
-                ws.send(JSON.stringify({
-                    type: 'answer',
-                    data: answer
-                }));
-            } catch (error) {
-                console.error('Error handling offer:', error);
-            }
-        }
+    function handleDragLeave(event) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('drag-over');
+    }
 
-        async function handleWebRTCAnswer(answer) {
-            try {
-                await pc.setRemoteDescription(answer);
-            } catch (error) {
-                console.error('Error handling answer:', error);
-            }
-        }
-
-        async function handleIceCandidate(candidate) {
-            try {
-                await pc.addIceCandidate(candidate);
-            } catch (error) {
-                console.error('Error adding ICE candidate:', error);
-            }
-        }
-
-        // Data channel setup
-        function setupDataChannel(channel) {
-            dataChannel = channel;
-            
-            channel.onopen = () => {
-                console.log('Data channel opened');
-                updateStatus('transferStatus', 'Ready for file transfer! 🚀', 'connected');
-                
-                if (!isReceiver && currentFile) {
-                    // Auto-start transfer if file is already selected
-                    startFileTransfer();
-                }
-            };
-            
-            channel.onclose = () => {
-                console.log('Data channel closed');
-                updateStatus('transferStatus', 'Transfer connection closed', 'waiting');
-            };
-            
-            channel.onerror = (error) => {
-                console.error('Data channel error:', error);
-                updateStatus('transferStatus', 'Transfer error occurred', 'error');
-            };
-            
-            channel.onmessage = (event) => {
-                handleDataChannelMessage(event.data);
-            };
-        }
-
-        // File selection setup
-        function setupFileSelection() {
-            const fileInput = document.getElementById('fileInput');
-            const dropZone = document.getElementById('dropZone');
-            
-            fileInput.onchange = (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    handleFileSelected(file);
-                }
-            };
-            
-            dropZone.ondragover = (event) => {
-                event.preventDefault();
-                dropZone.classList.add('drag-over');
-            };
-            
-            dropZone.ondragleave = () => {
-                dropZone.classList.remove('drag-over');
-            };
-            
-            dropZone.ondrop = (event) => {
-                event.preventDefault();
-                dropZone.classList.remove('drag-over');
-                const file = event.dataTransfer.files[0];
-                if (file) {
-                    handleFileSelected(file);
-                }
-            };
-        }
-
-        function handleFileSelected(file) {
-            const maxSize = 5 * 1024 * 1024 * 1024; // 5GB
-            if (file.size > maxSize) {
-                updateStatus('transferStatus', 'File too large! Maximum size is 5GB', 'error');
-                return;
-            }
-            
-            currentFile = file;
-            
-            // Show file info
-            const fileInfo = document.getElementById('fileInfo');
-            fileInfo.innerHTML = `
-                <strong>Selected File:</strong><br>
-                📄 <strong>Name:</strong> ${file.name}<br>
-                📊 <strong>Size:</strong> ${formatFileSize(file.size)}<br>
-                📅 <strong>Type:</strong> ${file.type || 'Unknown'}<br>
-                📝 <strong>Modified:</strong> ${new Date(file.lastModified).toLocaleString()}
-            `;
-            fileInfo.classList.remove('hidden');
-            
-            document.getElementById('fileSelection').classList.add('hidden');
-            
-            if (dataChannel && dataChannel.readyState === 'open') {
-                startFileTransfer();
-            } else {
-                updateStatus('transferStatus', 'File selected. Waiting for P2P connection...', 'waiting');
-            }
-        }
-
-        // File transfer functions
-        function startFileTransfer() {
-            if (!currentFile || !dataChannel) return;
-            
-            const chunkSize = 64 * 1024; // 64KB chunks
-            totalChunks = Math.ceil(currentFile.size / chunkSize);
-            let sentChunks = 0;
-            startTime = Date.now();
-            
-            // Send file metadata
-            const fileInfo = {
-                name: currentFile.name,
-                size: currentFile.size,
-                type: currentFile.type,
-                chunks: totalChunks,
-                chunkSize: chunkSize
-            };
-            
-            dataChannel.send(JSON.stringify({
-                type: 'file-start',
-                data: fileInfo
-            }));
-            
-            // Show progress
-            document.getElementById('progressSection').classList.remove('hidden');
-            updateStatus('transferStatus', 'Sending file...', 'waiting');
-            
-            // Send file in chunks
-            const reader = new FileReader();
-            let offset = 0;
-            
-            const sendNextChunk = () => {
-                if (offset >= currentFile.size) {
-                    // Transfer complete
-                    dataChannel.send(JSON.stringify({
-                        type: 'file-complete'
-                    }));
-                    updateStatus('transferStatus', 'File sent successfully! 🎉', 'connected');
-                    return;
-                }
-                
-                const chunk = currentFile.slice(offset, offset + chunkSize);
-                reader.onload = (e) => {
-                    const chunkData = {
-                        type: 'file-chunk',
-                        data: {
-                            index: sentChunks,
-                            data: Array.from(new Uint8Array(e.target.result))
-                        }
-                    };
-                    
-                    dataChannel.send(JSON.stringify(chunkData));
-                    
-                    sentChunks++;
-                    offset += chunkSize;
-                    
-                    // Update progress
-                    const progress = (sentChunks / totalChunks) * 100;
-                    const elapsed = (Date.now() - startTime) / 1000;
-                    const speed = (sentChunks * chunkSize) / elapsed;
-                    const remainingChunks = totalChunks - sentChunks;
-                    const eta = remainingChunks > 0 ? (remainingChunks * chunkSize) / speed : 0;
-                    
-                    updateProgress(progress, speed, eta);
-                    
-                    // Send next chunk
-                    setTimeout(sendNextChunk, 10); // Small delay to prevent overwhelming
-                };
-                reader.readAsArrayBuffer(chunk);
-            };
-            
-            sendNextChunk();
-        }
-
-        function handleDataChannelMessage(data) {
-            try {
-                const message = JSON.parse(data);
-                
-                switch (message.type) {
-                    case 'file-start':
-                        handleFileStart(message.data);
-                        break;
-                    case 'file-chunk':
-                        handleFileChunk(message.data);
-                        break;
-                    case 'file-complete':
-                        handleFileComplete();
-                        break;
-                }
-            } catch (error) {
-                console.error('Error handling data channel message:', error);
-            }
-        }
-
-        function handleFileStart(fileInfo) {
-            console.log('Receiving file:', fileInfo);
-            
-            totalChunks = fileInfo.chunks;
-            receivedChunks = new Array(totalChunks);
-            receivedSize = 0;
-            startTime = Date.now();
-            
-            // Show file info
-            const fileInfoElement = document.getElementById('fileInfo');
-            fileInfoElement.innerHTML = `
-                <strong>Incoming File:</strong><br>
-                📄 <strong>Name:</strong> ${fileInfo.name}<br>
-                📊 <strong>Size:</strong> ${formatFileSize(fileInfo.size)}<br>
-                📝 <strong>Type:</strong> ${fileInfo.type || 'Unknown'}
-            `;
-            fileInfoElement.classList.remove('hidden');
-            
-            // Show progress
-            document.getElementById('progressSection').classList.remove('hidden');
-            updateStatus('transferStatus', 'Receiving file...', 'waiting');
-        }
-
-        function handleFileChunk(chunkData) {
-            const { index, data } = chunkData;
-            receivedChunks[index] = new Uint8Array(data);
-            receivedSize += data.length;
-            
-            // Update progress
-            const receivedCount = receivedChunks.filter(chunk => chunk !== undefined).length;
-            const progress = (receivedCount / totalChunks) * 100;
-            const elapsed = (Date.now() - startTime) / 1000;
-            const speed = receivedSize / elapsed;
-            const remainingSize = (totalChunks - receivedCount) * data.length;
-            const eta = remainingSize > 0 ? remainingSize / speed : 0;
-            
-            updateProgress(progress, speed, eta);
-        }
-
-        function handleFileComplete() {
-            // Combine all chunks into a single file
-            const chunks = receivedChunks.filter(chunk => chunk !== undefined);
-            const fileData = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
-            
-            let offset = 0;
-            chunks.forEach(chunk => {
-                fileData.set(chunk, offset);
-                offset += chunk.length;
-            });
-            
-            // Create download
-            const blob = new Blob([fileData]);
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'received_file'; // You might want to store the original filename
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            updateStatus('transferStatus', 'File received successfully! 🎉', 'connected');
-        }
-
-        function updateProgress(percentage, speed, eta) {
-            document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = percentage.toFixed(1) + '%';
-            document.getElementById('speedText').textContent = 'Speed: ' + formatSpeed(speed);
-            document.getElementById('timeText').textContent = 'ETA: ' + formatTime(eta);
-        }
-
-        function handleFileInfo(data) {
-            // Handle file info messages if needed
-            console.log('File info:', data);
-        }
-
-        // Initialize drag and drop prevention on document
-        document.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
+    function sendFile() {
+      if (!selectedFile || !dataChannel || isTransferring) return;
+      
+      isTransferring = true;
+      document.getElementById('sendFileBtn').disabled = true;
+      
+      // Send file metadata
+      const metadata = {
+        type: "file-meta",
+        name: selectedFile.name,
+        size: selectedFile.size
+      };
+      
+      dataChannel.send(JSON.stringify(metadata));
+      addChatMessage("You", `📤 Sending file: ${selectedFile.name} (${formatFileSize(selectedFile.size)})`);
+      
+      // Send file in chunks
+      const chunkSize = 16 * 1024; // 16KB chunks
+      let offset = 0;
+      const reader = new FileReader();
+      
+      reader.onload = e => {
+        dataChannel.send(e.target.result);
+        offset += e.target.result.byteLength;
         
-        document.addEventListener('drop', (e) => {
-            e.preventDefault();
-        });
+        const progress = (offset / selectedFile.size) * 100;
+        showProgress(progress, `Sending ${selectedFile.name}`);
 
-        // OTP input formatting
-        document.getElementById('otpInput').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 6) value = value.substr(0, 6);
-            e.target.value = value;
-        });
+        if (offset < selectedFile.size) {
+          readSlice(offset);
+        } else {
+          // File transfer complete
+          dataChannel.send(JSON.stringify({ type: "file-complete" }));
+          addChatMessage("System", `✅ File sent successfully: ${selectedFile.name}`);
+          hideProgress();
+          isTransferring = false;
+          document.getElementById('sendFileBtn').innerHTML = "📤 Send File";
+          document.getElementById('sendFileBtn').disabled = true;
+          selectedFile = null;
+        }
+      };
 
-        // Auto-connect when 6 digits are entered
-        document.getElementById('otpInput').addEventListener('keyup', function(e) {
-            if (e.target.value.length === 6 && e.key === 'Enter') {
-                validateOTP();
+      function readSlice(o) {
+        const slice = selectedFile.slice(o, o + chunkSize);
+        reader.readAsArrayBuffer(slice);
+      }
+      
+      readSlice(0);
+      showProgress(0, `Sending ${selectedFile.name}`);
+    }
+
+    function showProgress(percent, text) {
+      const container = document.getElementById('progressContainer');
+      const fill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      const progressPercent = document.getElementById('progressPercent');
+      
+      container.style.display = 'block';
+      fill.style.width = percent + '%';
+      progressText.textContent = text;
+      progressPercent.textContent = Math.round(percent) + '%';
+    }
+
+    function hideProgress() {
+      const container = document.getElementById('progressContainer');
+      container.style.display = 'none';
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function showStatus(message, type, elementId) {
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+      }
+    }
+
+    function nextInput(index) {
+      const current = document.getElementById(`otp${index}`);
+      if (current.value.length === 1 && index < 5) {
+        document.getElementById(`otp${index + 1}`).focus();
+      }
+      
+      // Auto-submit when all fields are filled
+      const allFilled = Array.from({length: 6}, (_, i) => 
+        document.getElementById(`otp${i}`).value).every(val => val.length === 1);
+      
+      if (allFilled) {
+        setTimeout(submitOtp, 500);
+      }
+    }
+
+    function disconnect() {
+      if (dataChannel) {
+        dataChannel.close();
+      }
+      if (pc) {
+        pc.close();
+      }
+      if (ws) {
+        ws.close();
+      }
+      
+      // Reset state
+      dataChannel = null;
+      pc = null;
+      ws = null;
+      selectedFile = null;
+      isTransferring = false;
+      receivedChunks = [];
+      fileMetadata = null;
+      
+      // Reset UI
+      document.getElementById('chat').value = '';
+      document.getElementById('msgBox').value = '';
+      document.getElementById('downloadLink').innerHTML = '';
+      hideProgress();
+      
+      showSection('roleSelect');
+    }
+
+    // Handle OTP input with backspace
+    document.addEventListener('DOMContentLoaded', function() {
+      for (let i = 0; i < 6; i++) {
+        const input = document.getElementById(`otp${i}`);
+        if (input) {
+          input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value === '' && i > 0) {
+              document.getElementById(`otp${i-1}`).focus();
             }
-        });
+          });
+          
+          // Only allow numbers
+          input.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 1) {
+              this.value = this.value.slice(0, 1);
+            }
+          });
+        }
+      }
+    });
 
-        console.log('P2P File Transfer App Loaded');
-    </script>
+    // Add some welcome messages when page loads
+    window.addEventListener('load', function() {
+      // Add a subtle animation to role cards
+      const roleCards = document.querySelectorAll('.role-card');
+      roleCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.style.animation = 'slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
+      });
+    });
+
+    // Handle connection errors gracefully
+    window.addEventListener('beforeunload', function() {
+      if (ws) ws.close();
+      if (pc) pc.close();
+    });
+  </script>
 </body>
 </html>
