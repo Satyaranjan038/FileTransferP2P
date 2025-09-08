@@ -445,7 +445,10 @@
             
             if (!userId) userId = 'user_' + Math.random().toString(36).substr(2, 9);
             
-            const wsUrl = `ws://${window.location.host}/ws/${sessionId}/${userId}`;
+            // const wsUrl = `ws://${window.location.host}/ws/${sessionId}/${userId}`;
+            const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+            const wsUrl = `${protocol}${window.location.host}/ws/${sessionId}/${userId}`;
+
             ws = new WebSocket(wsUrl);
             
             ws.onopen = () => {
