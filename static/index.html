@@ -1601,12 +1601,12 @@
               completeFileReceive();
               break;
             case 'chat':
-              addChatMessage('Peer', obj.msg);
+              addChatMessage('Satya BOT', obj.msg);
               break;
           }
         } catch (err) {
           // If it's not JSON, treat as a regular chat message
-          addChatMessage('Peer', data);
+          addChatMessage('Satya BOT', data);
         }
       } else {
         // Binary data - file chunk
@@ -2096,7 +2096,7 @@
         selectedFiles = selectedFiles.filter(f => !f.selected);
         updateFileList();
 
-        
+
       } catch (err) {
         console.error('Error during file transfer:', err);
         addChatMessage('System', '❌ Error during transfer: ' + err.message);
