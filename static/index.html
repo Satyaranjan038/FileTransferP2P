@@ -1590,7 +1590,7 @@ async function sendFiles() {
     updateFileList();
   } catch (err) {
     console.error('Error while sending files', err);
-    addChatMessage('System', '❌ Error while sending files, but connection kept alive.');
+    addChatMessage('System', '❌ Error while sending files, but connection kept alive.' + String(err));
   } finally {
     isTransferring = false;
     document.getElementById('sendFileBtn').disabled = false;
