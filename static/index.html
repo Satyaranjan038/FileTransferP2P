@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SecureShare Pro - Ultra-Fast P2P File Transfer</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
+    
     * {
       margin: 0;
       padding: 0;
@@ -75,7 +74,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background:
+      background: 
         radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
@@ -115,14 +114,14 @@
       left: 0;
       right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
     }
 
     .logo {
       font-size: clamp(2rem, 5vw, 3rem);
       font-weight: 800;
       margin-bottom: var(--spacing-sm);
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
       background: linear-gradient(135deg, #fff, #e0e7ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -162,7 +161,6 @@
         opacity: 0;
         transform: translateY(30px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -200,7 +198,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
       transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -227,7 +225,7 @@
       font-size: 4rem;
       margin-bottom: var(--spacing-lg);
       display: block;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
     }
 
     .role-title {
@@ -265,7 +263,7 @@
       padding: var(--spacing-xl);
       border-radius: var(--border-radius-lg);
       margin: var(--spacing-lg) 0;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
       position: relative;
       overflow: hidden;
       box-shadow: var(--shadow-lg);
@@ -278,22 +276,14 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
       animation: shine 4s infinite;
     }
 
     @keyframes shine {
-      0% {
-        left: -100%;
-      }
-
-      50% {
-        left: 100%;
-      }
-
-      100% {
-        left: 100%;
-      }
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
     }
 
     .otp-inputs {
@@ -354,7 +344,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
       transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -443,17 +433,8 @@
     }
 
     @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-
-      50% {
-        opacity: 0.7;
-        transform: scale(1.2);
-      }
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.2); }
     }
 
     .transfer-section {
@@ -688,7 +669,7 @@
       background: var(--border);
       border-radius: 6px;
       overflow: hidden;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .progress-fill {
@@ -707,18 +688,13 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
       animation: progress-shine 2s infinite;
     }
 
     @keyframes progress-shine {
-      0% {
-        transform: translateX(-100%);
-      }
-
-      100% {
-        transform: translateX(100%);
-      }
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     .progress-text {
@@ -823,304 +799,6 @@
       cursor: pointer;
     }
 
-    .call-section {
-      background: var(--white);
-      border: 2px solid var(--border);
-      border-radius: var(--border-radius-lg);
-      padding: var(--spacing-xl);
-      margin-bottom: var(--spacing-xl);
-      box-shadow: var(--shadow);
-    }
-
-    .call-controls {
-      display: flex;
-      justify-content: center;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-lg);
-      flex-wrap: wrap;
-    }
-
-    .call-btn {
-      padding: var(--spacing-md) var(--spacing-lg);
-      border-radius: 50px;
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-      font-weight: 700;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      min-width: 140px;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .call-btn.video-call {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .call-btn.audio-call {
-      background: var(--success);
-      color: var(--white);
-    }
-
-    .call-btn.end-call {
-      background: var(--error);
-      color: var(--white);
-    }
-
-    .call-btn.mute {
-      background: var(--warning);
-      color: var(--white);
-    }
-
-    .call-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .call-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .video-container {
-      display: none;
-      grid-template-columns: 2fr 1fr;
-      gap: var(--spacing-lg);
-      margin: var(--spacing-lg) 0;
-      height: 400px;
-      border-radius: var(--border-radius-lg);
-      overflow: hidden;
-    }
-
-    .video-container.active {
-      display: grid;
-    }
-
-    .remote-video-wrapper {
-      position: relative;
-      background: var(--dark);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .local-video-wrapper {
-      position: relative;
-      background: var(--dark-light);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .video-element {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: var(--border-radius);
-    }
-
-    .video-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--white);
-      font-size: 1.2rem;
-      font-weight: 600;
-      opacity: 0;
-      transition: var(--transition);
-      pointer-events: none;
-    }
-
-    .video-wrapper:hover .video-overlay {
-      opacity: 1;
-    }
-
-    .audio-only-container {
-      display: none;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: var(--border-radius-lg);
-      padding: var(--spacing-2xl);
-      text-align: center;
-      color: var(--white);
-      margin: var(--spacing-lg) 0;
-    }
-
-    .audio-only-container.active {
-      display: block;
-    }
-
-    .audio-avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      margin: 0 auto var(--spacing-lg);
-      animation: pulse 2s infinite;
-    }
-
-    .call-status {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-md);
-      padding: var(--spacing-md);
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: var(--border-radius);
-      margin-bottom: var(--spacing-lg);
-      font-weight: 600;
-    }
-
-    .call-duration {
-      font-family: 'Inter', monospace;
-      font-weight: 600;
-      color: var(--success);
-    }
-
-    .incoming-call-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      backdrop-filter: blur(10px);
-    }
-
-    .incoming-call-modal.show {
-      display: flex;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .incoming-call-content {
-      background: var(--white);
-      border-radius: var(--border-radius-lg);
-      padding: var(--spacing-2xl);
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: var(--shadow-xl);
-    }
-
-    .incoming-call-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      color: var(--white);
-      margin: 0 auto var(--spacing-lg);
-      animation: pulse 1.5s infinite;
-    }
-
-    .incoming-call-actions {
-      display: flex;
-      gap: var(--spacing-lg);
-      justify-content: center;
-      margin-top: var(--spacing-xl);
-    }
-
-    .call-answer {
-      background: var(--success);
-      color: var(--white);
-      border: none;
-      padding: var(--spacing-md) var(--spacing-xl);
-      border-radius: 50px;
-      cursor: pointer;
-      transition: var(--transition);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .call-decline {
-      background: var(--error);
-      color: var(--white);
-      border: none;
-      padding: var(--spacing-md) var(--spacing-xl);
-      border-radius: 50px;
-      cursor: pointer;
-      transition: var(--transition);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    /* Mobile responsiveness for video calling */
-    @media (max-width: 768px) {
-      .video-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
-        height: 300px;
-      }
-
-      .local-video-wrapper {
-        height: 120px;
-      }
-
-      .call-controls {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .call-btn {
-        min-width: 200px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .video-container {
-        height: 250px;
-      }
-
-      .local-video-wrapper {
-        height: 100px;
-      }
-
-      .incoming-call-actions {
-        flex-direction: column;
-        gap: var(--spacing-md);
-      }
-    }
-
     .download-file-icon {
       font-size: 2.5rem;
       margin-bottom: var(--spacing-md);
@@ -1200,7 +878,6 @@
         transform: translateY(100px);
         opacity: 0;
       }
-
       to {
         transform: translateY(0);
         opacity: 1;
@@ -1242,11 +919,11 @@
         max-width: 95vw;
         margin: var(--spacing-md);
       }
-
+      
       .transfer-section {
         grid-template-columns: 1fr;
       }
-
+      
       .download-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       }
@@ -1438,7 +1115,6 @@
 
     /* Accessibility improvements */
     @media (prefers-reduced-motion: reduce) {
-
       *,
       *::before,
       *::after {
@@ -1480,21 +1156,18 @@
     }
 
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
     /* Enhanced hover states for touch devices */
     @media (hover: none) {
-
       .role-card:hover,
       .btn:hover,
       .file-item:hover,
       .download-item:hover {
         transform: none;
       }
-
+      
       .role-card:active,
       .btn:active {
         transform: scale(0.98);
@@ -1510,9 +1183,9 @@
         --dark: #f9fafb;
         --gray: #d1d5db;
       }
-
+      
       body::before {
-        background:
+        background: 
           radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
           radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
           radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
@@ -1525,12 +1198,12 @@
         background: white;
         color: black;
       }
-
+      
       .container {
         box-shadow: none;
         border: 1px solid #000;
       }
-
+      
       .btn,
       .bulk-download {
         display: none;
@@ -1538,7 +1211,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="container">
     <div class="header">
@@ -1553,14 +1225,12 @@
           <div class="role-card sender" onclick="beCreator()">
             <div class="role-icon">📤</div>
             <div class="role-title">I'm Sending</div>
-            <div class="role-desc">Generate a secure code and share multiple files up to 5GB each with ultra-fast
-              transfer speeds</div>
+            <div class="role-desc">Generate a secure code and share multiple files up to 5GB each with ultra-fast transfer speeds</div>
           </div>
           <div class="role-card receiver" onclick="beJoiner()">
             <div class="role-icon">📥</div>
             <div class="role-title">I'm Receiving</div>
-            <div class="role-desc">Enter the secure code to receive files with advanced encryption and blazing fast
-              speeds</div>
+            <div class="role-desc">Enter the secure code to receive files with advanced encryption and blazing fast speeds</div>
           </div>
         </div>
       </div>
@@ -1618,78 +1288,17 @@
             <div class="panel-title">💬 Secure Chat</div>
             <textarea id="chat" class="chat-area" placeholder="Secure messages will appear here..." readonly></textarea>
             <div class="chat-input">
-              <input id="msgBox" type="text" placeholder="Type a secure message..." onkeypress="handleEnter(event)"
-                autocomplete="off">
+              <input id="msgBox" type="text" placeholder="Type a secure message..." onkeypress="handleEnter(event)" autocomplete="off">
               <button class="btn" onclick="sendMsg()">Send</button>
-            </div>
-          </div>
-
-          <div class="call-section">
-            <div class="panel-title">📞 High-Quality Voice & Video Calls</div>
-
-            <div class="call-controls">
-              <button class="call-btn video-call" onclick="startVideoCall()" id="videoCallBtn">
-                📹 Start Video Call
-              </button>
-              <button class="call-btn audio-call" onclick="startAudioCall()" id="audioCallBtn">
-                🎤 Start Voice Call
-              </button>
-              <button class="call-btn mute" onclick="toggleMute()" id="muteBtn" style="display: none;">
-                🔇 Mute
-              </button>
-              <button class="call-btn end-call" onclick="endCall()" id="endCallBtn" style="display: none;">
-                📞 End Call
-              </button>
-            </div>
-
-            <div class="call-status" id="callStatus" style="display: none;">
-              <div class="status-dot"></div>
-              <span id="callStatusText">Connecting...</span>
-              <span class="call-duration" id="callDuration">00:00</span>
-            </div>
-
-            <!-- Video Call Container -->
-            <div class="video-container" id="videoContainer">
-              <div class="remote-video-wrapper">
-                <video id="remoteVideo" class="video-element" autoplay playsinline></video>
-                <div class="video-overlay">Remote Video</div>
-              </div>
-              <div class="local-video-wrapper">
-                <video id="localVideo" class="video-element" autoplay muted playsinline></video>
-                <div class="video-overlay">You</div>
-              </div>
-            </div>
-
-            <!-- Audio Only Container -->
-            <div class="audio-only-container" id="audioContainer">
-              <div class="audio-avatar">🎤</div>
-              <h3>Voice Call Active</h3>
-              <p>High-quality audio connection established</p>
-            </div>
-          </div>
-
-          <!-- Incoming Call Modal -->
-          <div class="incoming-call-modal" id="incomingCallModal">
-            <div class="incoming-call-content">
-              <div class="incoming-call-avatar">📞</div>
-              <h3>Incoming Call</h3>
-              <p id="incomingCallType">Video Call</p>
-              <div class="incoming-call-actions">
-                <button class="call-answer" onclick="answerCall()">
-                  📞 Answer
-                </button>
-                <button class="call-decline" onclick="declineCall()">
-                  ❌ Decline
-                </button>
-              </div>
             </div>
           </div>
 
           <!-- Enhanced File Transfer Panel -->
           <div class="transfer-panel">
             <div class="panel-title">📁 Multi-File Transfer Hub</div>
-            <div class="file-upload" onclick="document.getElementById('fileInput').click()" ondrop="handleDrop(event)"
-              ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+            <div class="file-upload" onclick="document.getElementById('fileInput').click()" 
+                 ondrop="handleDrop(event)" ondragover="handleDragOver(event)" 
+                 ondragleave="handleDragLeave(event)">
               <div class="file-icon">📄</div>
               <div class="file-upload-text">Click to select or drag multiple files here</div>
               <div class="file-upload-desc">
@@ -1698,9 +1307,9 @@
               </div>
             </div>
             <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileSelect()">
-
+            
             <div id="fileList" class="file-list"></div>
-
+            
             <div class="file-controls">
               <button class="btn success" onclick="selectAllFiles()" id="selectAllBtn" disabled>
                 ✅ Select All
@@ -1709,12 +1318,11 @@
                 🗑️ Clear All
               </button>
             </div>
-
-            <button class="btn secondary" onclick="sendFiles()" id="sendFileBtn"
-              style="width: 100%; margin-top: var(--spacing-md);" disabled>
+            
+            <button class="btn secondary" onclick="sendFiles()" id="sendFileBtn" style="width: 100%; margin-top: var(--spacing-md);" disabled>
               📤 Send Selected Files
             </button>
-
+            
             <div id="progressContainer" class="progress-container">
               <div class="progress-bar">
                 <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
@@ -1773,8 +1381,8 @@
     let selectedDownloads = new Set();
 
     // Enhanced Configuration
-    const CHUNK_SIZE = 64 * 1024;
-    const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024;
+    const CHUNK_SIZE = 64 * 1024; 
+    const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024; 
     const MAX_FILE_COUNT = 100;
     const MAX_SCTP_BUFFERED = 16 * 1024 * 1024;
     const BUFFERED_LOW_THRESHOLD = 8 * 1024 * 1024;
@@ -1784,7 +1392,7 @@
       document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
       });
-
+      
       const targetSection = document.getElementById(sectionId);
       if (targetSection) {
         targetSection.classList.add('active');
@@ -1831,15 +1439,15 @@
     }
 
     function submitOtp() {
-      const otp = Array.from({ length: 6 }, (_, i) =>
+      const otp = Array.from({ length: 6 }, (_, i) => 
         document.getElementById(`otp${i}`).value
       ).join('');
-
+      
       if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
         showStatus('⚠️ Please enter a valid 6-digit code', 'error', 'joinStatus');
         return;
       }
-
+      
       showLoadingState();
       ws = new WebSocket('wss://filetransferp2p.onrender.com/ws/joiner');
       ws.onopen = () => ws.send(JSON.stringify({ otp }));
@@ -1852,7 +1460,7 @@
         try {
           const msg = JSON.parse(event.data);
           hideLoadingState();
-
+          
           switch (msg.type) {
             case 'otp':
               document.getElementById('otpCode').innerText = msg.otp;
@@ -1888,7 +1496,7 @@
         hideLoadingState();
         showStatus('🔌 Connection lost. Please try again.', 'error', 'joinStatus');
       };
-
+      
       ws.onerror = () => {
         hideLoadingState();
         showStatus('❌ Connection failed. Please check your internet and try again.', 'error', 'joinStatus');
@@ -1907,9 +1515,9 @@
 
       pc.onicecandidate = (event) => {
         if (event.candidate && ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({
-            type: 'candidate',
-            candidate: event.candidate
+          ws.send(JSON.stringify({ 
+            type: 'candidate', 
+            candidate: event.candidate 
           }));
         }
       };
@@ -1920,12 +1528,12 @@
       };
 
       if (role === 'creator') {
-        dataChannel = pc.createDataChannel('data', {
+        dataChannel = pc.createDataChannel('data', { 
           ordered: true,
-          maxRetransmits: 3
+          maxRetransmits: 3 
         });
         setupDataChannel(dataChannel);
-
+        
         pc.createOffer().then(offer => {
           pc.setLocalDescription(offer);
           if (ws && ws.readyState === WebSocket.OPEN) {
@@ -1940,7 +1548,7 @@
 
     function setupDataChannel(channel) {
       channel.binaryType = 'arraybuffer';
-
+      
       try {
         channel.bufferedAmountLowThreshold = BUFFERED_LOW_THRESHOLD;
       } catch (e) {
@@ -1979,7 +1587,7 @@
       if (typeof data === 'string') {
         try {
           const obj = JSON.parse(data);
-
+          
           switch (obj.type) {
             case 'file-meta':
               fileMetadata = obj;
@@ -2006,11 +1614,11 @@
           receivedChunks.push(data);
           const chunkLength = data instanceof ArrayBuffer ? data.byteLength : (data.size || 0);
           totalBytesTransferred += chunkLength;
-
+          
           const progress = Math.min((totalBytesTransferred / fileMetadata.size) * 100, 100);
           const elapsed = Math.max((Date.now() - transferStartTime) / 1000, 0.001);
           const speed = totalBytesTransferred / elapsed;
-
+          
           showProgress(progress, `Receiving ${fileMetadata.name}`, speed);
         }
       }
@@ -2020,21 +1628,21 @@
       try {
         const receivedBlob = new Blob(receivedChunks);
         const fileUrl = URL.createObjectURL(receivedBlob);
-
+        
         const fileInfo = {
           name: fileMetadata.name,
           size: fileMetadata.size,
           url: fileUrl,
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
         };
-
+        
         receivedFiles.push(fileInfo);
         updateDownloadSection();
         addChatMessage('System', `✅ File received successfully: ${fileMetadata.name}`);
-
+        
         // Show success animation
         showNotification('File received successfully!', 'success');
-
+        
       } catch (err) {
         console.error('Error assembling received file:', err);
         addChatMessage('System', '❌ Error processing received file');
@@ -2050,7 +1658,7 @@
     function updateDownloadSection() {
       const downloadSection = document.getElementById('downloadSection');
       const downloadGrid = document.getElementById('downloadGrid');
-
+      
       if (!downloadSection || !downloadGrid) return;
 
       if (receivedFiles.length === 0) {
@@ -2110,7 +1718,7 @@
     function updateBulkDownloadButton() {
       const bulkBtn = document.getElementById('bulkDownloadBtn');
       const bulkText = document.getElementById('bulkDownloadText');
-
+      
       if (!bulkBtn) return;
 
       if (selectedDownloads.size > 0) {
@@ -2124,7 +1732,7 @@
     }
 
     function downloadSelected() {
-      const selectedFiles = receivedFiles.filter(file =>
+      const selectedFiles = receivedFiles.filter(file => 
         selectedDownloads.has(file.id)
       );
 
@@ -2149,7 +1757,7 @@
       // Clear upload files
       selectedFiles = [];
       selectedDownloads.clear();
-
+      
       // Revoke object URLs to free memory
       receivedFiles.forEach(file => {
         try {
@@ -2158,12 +1766,12 @@
           console.warn('Failed to revoke URL:', e);
         }
       });
-
+      
       receivedFiles = [];
       updateFileList();
       updateDownloadSection();
       updateBulkDownloadButton();
-
+      
       addChatMessage('System', '🧹 All files cleared. Memory freed for new transfers.');
       showNotification('All files cleared', 'success');
     }
@@ -2174,33 +1782,33 @@
         // Documents
         pdf: '📄', doc: '📝', docx: '📝', txt: '📝', rtf: '📝',
         xls: '📊', xlsx: '📊', csv: '📊', ppt: '📊', pptx: '📊',
-
+        
         // Images
         jpg: '🖼️', jpeg: '🖼️', png: '🖼️', gif: '🖼️', svg: '🖼️',
         bmp: '🖼️', webp: '🖼️', ico: '🖼️', tiff: '🖼️',
-
+        
         // Videos
         mp4: '🎥', avi: '🎥', mov: '🎥', wmv: '🎥', mkv: '🎥',
         flv: '🎥', webm: '🎥', m4v: '🎥', '3gp': '🎥',
-
+        
         // Audio
         mp3: '🎵', wav: '🎵', flac: '🎵', m4a: '🎵', aac: '🎵',
         ogg: '🎵', wma: '🎵', opus: '🎵',
-
+        
         // Archives
         zip: '🗜️', rar: '🗜️', '7z': '🗜️', tar: '🗜️', gz: '🗜️',
         bz2: '🗜️', xz: '🗜️',
-
+        
         // Code
         js: '⚡', html: '🌐', css: '🎨', json: '📋', xml: '📋',
         py: '🐍', java: '☕', cpp: '⚙️', c: '⚙️', php: '🔧',
         rb: '💎', go: '🔵', rs: '⚙️', swift: '🧡',
-
+        
         // Applications
         exe: '⚙️', msi: '⚙️', dmg: '💽', pkg: '📦', deb: '📦',
         rpm: '📦', appx: '📦'
       };
-
+      
       return iconMap[ext] || '📄';
     }
 
@@ -2208,11 +1816,11 @@
       const chatArea = document.getElementById('chat');
       if (!chatArea) return;
 
-      const timestamp = new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
+      const timestamp = new Date().toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit' 
       });
-
+      
       const formattedMessage = `[${timestamp}] ${sender}: ${message}\n`;
       chatArea.value += formattedMessage;
       chatArea.scrollTop = chatArea.scrollHeight;
@@ -2229,7 +1837,7 @@
     function sendMsg() {
       const msgBox = document.getElementById('msgBox');
       const message = msgBox?.value?.trim();
-
+      
       if (!message || !dataChannel || dataChannel.readyState !== 'open') {
         if (!message) {
           msgBox?.focus();
@@ -2263,7 +1871,7 @@
 
       if (newFiles.length > remainingSlots) {
         showNotification(
-          `Can only add ${remainingSlots} more files (limit: ${MAX_FILE_COUNT})`,
+          `Can only add ${remainingSlots} more files (limit: ${MAX_FILE_COUNT})`, 
           'error'
         );
       }
@@ -2274,14 +1882,14 @@
 
       filesToAdd.forEach(file => {
         if (file.size > MAX_FILE_SIZE) {
-          addChatMessage('System',
+          addChatMessage('System', 
             `❌ File too large: ${file.name} (max ${formatFileSize(MAX_FILE_SIZE)})`
           );
           skippedCount++;
           return;
         }
 
-        const isDuplicate = selectedFiles.some(f =>
+        const isDuplicate = selectedFiles.some(f => 
           f.file.name === file.name && f.file.size === file.size
         );
 
@@ -2362,7 +1970,7 @@
       selectedFiles.forEach((entry, index) => {
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
-
+        
         fileItem.innerHTML = `
           <input type="checkbox" class="file-checkbox" 
                  data-file-idx="${index}" 
@@ -2430,7 +2038,7 @@
       const canSend = selectedCount > 0 && isChannelReady && !isTransferring;
 
       sendBtn.disabled = !canSend;
-      sendBtn.innerHTML = selectedCount > 0
+      sendBtn.innerHTML = selectedCount > 0 
         ? `📤 Send ${selectedCount} Files (${formatFileSize(totalSize)})`
         : '📤 Send Selected Files';
     }
@@ -2449,7 +2057,7 @@
 
     async function sendFiles() {
       const filesToSend = selectedFiles.filter(f => f.selected);
-
+      
       if (filesToSend.length === 0) {
         showNotification('No files selected', 'error');
         return;
@@ -2472,14 +2080,14 @@
       try {
         for (let i = 0; i < filesToSend.length; i++) {
           await sendSingleFile(filesToSend[i].file, i + 1, filesToSend.length);
-
+          
           // Brief pause between files
           if (i < filesToSend.length - 1) {
             await sleep(200);
           }
         }
 
-        addChatMessage('System',
+        addChatMessage('System', 
           `✅ All files sent successfully! (${filesToSend.length} files)`
         );
         showNotification('All files sent successfully!', 'success');
@@ -2516,11 +2124,11 @@
 
       safeSend(JSON.stringify(metadata));
 
-      const fileInfo = totalFiles > 1
+      const fileInfo = totalFiles > 1 
         ? `${file.name} (${currentFile}/${totalFiles})`
         : file.name;
 
-      addChatMessage('You',
+      addChatMessage('You', 
         `📤 Sending: ${fileInfo} (${formatFileSize(file.size)})`
       );
 
@@ -2571,7 +2179,7 @@
     async function waitForBufferBelow(threshold) {
       return new Promise((resolve) => {
         if (!dataChannel) return resolve();
-
+        
         if (dataChannel.bufferedAmount <= threshold) {
           return resolve();
         }
@@ -2582,7 +2190,7 @@
           if (intervalId) clearInterval(intervalId);
           try {
             dataChannel.removeEventListener('bufferedamountlow', onLow);
-          } catch (e) { }
+          } catch (e) {}
         };
 
         const onLow = () => {
@@ -2608,7 +2216,7 @@
             resolve();
             return;
           }
-
+          
           if (dataChannel.bufferedAmount <= threshold) {
             resolved = true;
             cleanup();
@@ -2638,19 +2246,19 @@
       if (!container) return;
 
       container.classList.add('show');
-
+      
       if (fill) {
         fill.style.width = Math.min(percent, 100) + '%';
       }
-
+      
       if (progressText) {
         progressText.textContent = text;
       }
-
+      
       if (progressPercent) {
         progressPercent.textContent = Math.round(Math.min(percent, 100)) + '%';
       }
-
+      
       if (transferSpeed) {
         transferSpeed.textContent = speed > 0 ? ` • ${formatSpeed(speed)}` : '';
       }
@@ -2665,21 +2273,21 @@
 
     function formatFileSize(bytes) {
       if (bytes === 0) return '0 Bytes';
-
+      
       const k = 1024;
       const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
-
+      
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     function formatSpeed(bytesPerSecond) {
       if (bytesPerSecond === 0) return '0 B/s';
-
+      
       const k = 1024;
       const sizes = ['B/s', 'KB/s', 'MB/s', 'GB/s'];
       const i = Math.floor(Math.log(bytesPerSecond) / Math.log(k));
-
+      
       return parseFloat((bytesPerSecond / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
 
@@ -2724,14 +2332,14 @@
 
     function nextInput(index) {
       const current = document.getElementById(`otp${index}`);
-
+      
       if (current && current.value.length === 1 && index < 5) {
         const next = document.getElementById(`otp${index + 1}`);
         if (next) next.focus();
       }
 
       // Check if all inputs are filled
-      const allInputs = Array.from({ length: 6 }, (_, i) =>
+      const allInputs = Array.from({ length: 6 }, (_, i) => 
         document.getElementById(`otp${i}`)?.value || ''
       );
 
@@ -2748,7 +2356,7 @@
       const sendBtn = document.getElementById('sendFileBtn');
       const selectAllBtn = document.getElementById('selectAllBtn');
       const clearBtn = document.getElementById('clearFilesBtn');
-
+      
       if (sendBtn) sendBtn.disabled = true;
       if (selectAllBtn) selectAllBtn.disabled = true;
       if (clearBtn) clearBtn.disabled = true;
@@ -2779,27 +2387,27 @@
       }
 
       resetState();
-
+      
       const chatArea = document.getElementById('chat');
       const msgBox = document.getElementById('msgBox');
-
+      
       if (chatArea) chatArea.value = '';
       if (msgBox) msgBox.value = '';
-
+      
       hideProgress();
       showSection('roleSelect');
       showNotification('Disconnected successfully', 'success');
     }
 
     // Enhanced OTP input handling
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       // Setup OTP inputs
       for (let i = 0; i < 6; i++) {
         const input = document.getElementById(`otp${i}`);
         if (!input) continue;
 
         // Handle backspace
-        input.addEventListener('keydown', function (e) {
+        input.addEventListener('keydown', function(e) {
           if (e.key === 'Backspace' && this.value === '' && i > 0) {
             const prev = document.getElementById(`otp${i - 1}`);
             if (prev) {
@@ -2810,7 +2418,7 @@
         });
 
         // Filter non-numeric input
-        input.addEventListener('input', function () {
+        input.addEventListener('input', function() {
           this.value = this.value.replace(/[^0-9]/g, '');
           if (this.value.length > 1) {
             this.value = this.value.slice(0, 1);
@@ -2818,18 +2426,18 @@
         });
 
         // Handle paste
-        input.addEventListener('paste', function (e) {
+        input.addEventListener('paste', function(e) {
           e.preventDefault();
           const paste = (e.clipboardData || window.clipboardData).getData('text');
           const digits = paste.replace(/[^0-9]/g, '').slice(0, 6);
-
+          
           for (let j = 0; j < digits.length && (i + j) < 6; j++) {
             const targetInput = document.getElementById(`otp${i + j}`);
             if (targetInput) {
               targetInput.value = digits[j];
             }
           }
-
+          
           if (digits.length === 6) {
             setTimeout(submitOtp, 100);
           }
@@ -2838,7 +2446,7 @@
 
       // Initialize UI state
       resetState();
-
+      
       // Add CSS animations
       const style = document.createElement('style');
       style.textContent = `
@@ -2868,12 +2476,12 @@
     });
 
     // Graceful cleanup on page unload
-    window.addEventListener('beforeunload', function () {
+    window.addEventListener('beforeunload', function() {
       disconnect();
     });
 
     // Handle visibility change (tab switching)
-    document.addEventListener('visibilitychange', function () {
+    document.addEventListener('visibilitychange', function() {
       if (!document.hidden && dataChannel && dataChannel.readyState === 'open') {
         // Refresh UI when tab becomes visible again
         updateFileList();
@@ -2884,542 +2492,6 @@
     // Performance monitoring (optional)
     if (window.performance && window.performance.mark) {
       window.performance.mark('app-loaded');
-    }
-
-
-    // Add these variables at the top with your other global variables (around line 600)
-    let localStream = null;
-    let remoteStream = null;
-    let isInCall = false;
-    let callType = null; // 'video' or 'audio'
-    let callStartTime = 0;
-    let callTimer = null;
-    let isMuted = false;
-    let incomingCallType = null;
-
-    // Add these functions to your JavaScript code (add them after the existing functions, around line 1500)
-
-    // Video/Audio Calling Functions
-    async function startVideoCall() {
-      if (!dataChannel || dataChannel.readyState !== 'open') {
-        showNotification('Connection not ready for video call', 'error');
-        return;
-      }
-
-      try {
-        await requestUserMedia(true, true); // video and audio
-        callType = 'video';
-        sendCallRequest('video');
-        showCallUI();
-        addChatMessage('System', '📹 Starting video call...');
-      } catch (err) {
-        console.error('Failed to start video call:', err);
-        showNotification('Failed to access camera/microphone', 'error');
-        addChatMessage('System', '❌ Video call failed: Camera/microphone access denied');
-      }
-    }
-
-    async function startAudioCall() {
-      if (!dataChannel || dataChannel.readyState !== 'open') {
-        showNotification('Connection not ready for voice call', 'error');
-        return;
-      }
-
-      try {
-        await requestUserMedia(false, true); // audio only
-        callType = 'audio';
-        sendCallRequest('audio');
-        showCallUI();
-        addChatMessage('System', '🎤 Starting voice call...');
-      } catch (err) {
-        console.error('Failed to start audio call:', err);
-        showNotification('Failed to access microphone', 'error');
-        addChatMessage('System', '❌ Voice call failed: Microphone access denied');
-      }
-    }
-
-    async function requestUserMedia(video, audio) {
-      try {
-        const constraints = {
-          video: video ? {
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-            frameRate: { ideal: 30 }
-          } : false,
-          audio: audio ? {
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true,
-            sampleRate: 48000
-          } : false
-        };
-
-        localStream = await navigator.mediaDevices.getUserMedia(constraints);
-
-        const localVideo = document.getElementById('localVideo');
-        if (localVideo && localStream) {
-          localVideo.srcObject = localStream;
-        }
-
-        // Add tracks to peer connection
-        if (pc && localStream) {
-          localStream.getTracks().forEach(track => {
-            pc.addTrack(track, localStream);
-          });
-        }
-
-        return localStream;
-      } catch (err) {
-        console.error('Error accessing media devices:', err);
-        throw new Error('Failed to access camera/microphone. Please check permissions.');
-      }
-    }
-
-    function sendCallRequest(type) {
-      if (dataChannel && dataChannel.readyState === 'open') {
-        try {
-          dataChannel.send(JSON.stringify({
-            type: 'call-request',
-            callType: type
-          }));
-        } catch (err) {
-          console.error('Failed to send call request:', err);
-        }
-      }
-    }
-
-    function showIncomingCall(type) {
-      incomingCallType = type;
-      const modal = document.getElementById('incomingCallModal');
-      const callTypeElement = document.getElementById('incomingCallType');
-
-      if (modal) modal.classList.add('show');
-      if (callTypeElement) {
-        callTypeElement.textContent = type === 'video' ? 'Video Call' : 'Voice Call';
-      }
-
-      // Auto-decline after 30 seconds
-      setTimeout(() => {
-        if (incomingCallType && !isInCall) {
-          declineCall();
-        }
-      }, 30000);
-
-      addChatMessage('System', `📞 Incoming ${type} call...`);
-    }
-
-    async function answerCall() {
-      if (!incomingCallType) return;
-
-      try {
-        const video = incomingCallType === 'video';
-        await requestUserMedia(video, true);
-
-        callType = incomingCallType;
-        hideIncomingCallModal();
-        showCallUI();
-
-        // Send answer
-        if (dataChannel && dataChannel.readyState === 'open') {
-          dataChannel.send(JSON.stringify({
-            type: 'call-answer',
-            accepted: true
-          }));
-        }
-
-        addChatMessage('System', `✅ ${callType} call connected!`);
-        startCallTimer();
-      } catch (err) {
-        console.error('Failed to answer call:', err);
-        declineCall();
-        showNotification('Failed to access camera/microphone', 'error');
-      }
-    }
-
-    function declineCall() {
-      hideIncomingCallModal();
-
-      if (dataChannel && dataChannel.readyState === 'open') {
-        try {
-          dataChannel.send(JSON.stringify({
-            type: 'call-answer',
-            accepted: false
-          }));
-        } catch (err) {
-          console.error('Failed to send call decline:', err);
-        }
-      }
-
-      incomingCallType = null;
-      addChatMessage('System', '📞 Call declined');
-    }
-
-    function hideIncomingCallModal() {
-      const modal = document.getElementById('incomingCallModal');
-      if (modal) modal.classList.remove('show');
-    }
-
-    function showCallUI() {
-      isInCall = true;
-
-      // Show/hide appropriate UI elements
-      const videoContainer = document.getElementById('videoContainer');
-      const audioContainer = document.getElementById('audioContainer');
-      const callStatus = document.getElementById('callStatus');
-      const videoCallBtn = document.getElementById('videoCallBtn');
-      const audioCallBtn = document.getElementById('audioCallBtn');
-      const endCallBtn = document.getElementById('endCallBtn');
-      const muteBtn = document.getElementById('muteBtn');
-
-      if (callType === 'video' && videoContainer) {
-        videoContainer.classList.add('active');
-        if (audioContainer) audioContainer.classList.remove('active');
-      } else if (callType === 'audio' && audioContainer) {
-        audioContainer.classList.add('active');
-        if (videoContainer) videoContainer.classList.remove('active');
-      }
-
-      if (callStatus) {
-        callStatus.style.display = 'flex';
-        updateCallStatus('Connected');
-      }
-
-      // Update button visibility
-      if (videoCallBtn) videoCallBtn.style.display = 'none';
-      if (audioCallBtn) audioCallBtn.style.display = 'none';
-      if (endCallBtn) endCallBtn.style.display = 'inline-flex';
-      if (muteBtn) muteBtn.style.display = 'inline-flex';
-
-      startCallTimer();
-    }
-
-    function hideCallUI() {
-      isInCall = false;
-      callType = null;
-
-      const videoContainer = document.getElementById('videoContainer');
-      const audioContainer = document.getElementById('audioContainer');
-      const callStatus = document.getElementById('callStatus');
-      const videoCallBtn = document.getElementById('videoCallBtn');
-      const audioCallBtn = document.getElementById('audioCallBtn');
-      const endCallBtn = document.getElementById('endCallBtn');
-      const muteBtn = document.getElementById('muteBtn');
-
-      if (videoContainer) videoContainer.classList.remove('active');
-      if (audioContainer) audioContainer.classList.remove('active');
-      if (callStatus) callStatus.style.display = 'none';
-
-      // Reset button visibility
-      if (videoCallBtn) videoCallBtn.style.display = 'inline-flex';
-      if (audioCallBtn) audioCallBtn.style.display = 'inline-flex';
-      if (endCallBtn) endCallBtn.style.display = 'none';
-      if (muteBtn) muteBtn.style.display = 'none';
-
-      stopCallTimer();
-    }
-
-    function updateCallStatus(status) {
-      const statusText = document.getElementById('callStatusText');
-      if (statusText) {
-        statusText.textContent = status;
-      }
-    }
-
-    function startCallTimer() {
-      callStartTime = Date.now();
-      callTimer = setInterval(updateCallDuration, 1000);
-    }
-
-    function stopCallTimer() {
-      if (callTimer) {
-        clearInterval(callTimer);
-        callTimer = null;
-      }
-
-      const durationElement = document.getElementById('callDuration');
-      if (durationElement) {
-        durationElement.textContent = '00:00';
-      }
-    }
-
-    function updateCallDuration() {
-      if (!callStartTime) return;
-
-      const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
-      const minutes = Math.floor(elapsed / 60);
-      const seconds = elapsed % 60;
-
-      const durationElement = document.getElementById('callDuration');
-      if (durationElement) {
-        durationElement.textContent =
-          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      }
-    }
-
-    function toggleMute() {
-      if (!localStream) return;
-
-      const audioTracks = localStream.getAudioTracks();
-      if (audioTracks.length === 0) return;
-
-      isMuted = !isMuted;
-      audioTracks.forEach(track => {
-        track.enabled = !isMuted;
-      });
-
-      const muteBtn = document.getElementById('muteBtn');
-      if (muteBtn) {
-        muteBtn.innerHTML = isMuted ? '🔇 Unmute' : '🔇 Mute';
-        muteBtn.style.background = isMuted ? 'var(--error)' : 'var(--warning)';
-      }
-
-      addChatMessage('System', isMuted ? '🔇 Microphone muted' : '🎤 Microphone unmuted');
-    }
-
-    function endCall() {
-      // Send end call signal
-      if (dataChannel && dataChannel.readyState === 'open') {
-        try {
-          dataChannel.send(JSON.stringify({
-            type: 'call-end'
-          }));
-        } catch (err) {
-          console.error('Failed to send call end signal:', err);
-        }
-      }
-
-      cleanupCall();
-      addChatMessage('System', '📞 Call ended');
-      showNotification('Call ended', 'info');
-    }
-
-    function cleanupCall() {
-      // Stop local stream
-      if (localStream) {
-        localStream.getTracks().forEach(track => {
-          track.stop();
-        });
-        localStream = null;
-      }
-
-      // Clear video elements
-      const localVideo = document.getElementById('localVideo');
-      const remoteVideo = document.getElementById('remoteVideo');
-
-      if (localVideo) localVideo.srcObject = null;
-      if (remoteVideo) remoteVideo.srcObject = null;
-
-      // Reset state
-      isMuted = false;
-      incomingCallType = null;
-
-      hideCallUI();
-      hideIncomingCallModal();
-    }
-
-    // Update the setupDataChannel function to handle call messages
-    // Replace the existing setupDataChannel function with this enhanced version:
-
-    function setupDataChannel(channel) {
-      channel.binaryType = 'arraybuffer';
-
-      try {
-        channel.bufferedAmountLowThreshold = BUFFERED_LOW_THRESHOLD;
-      } catch (e) {
-        console.warn('bufferedAmountLowThreshold not supported');
-      }
-
-      channel.onopen = () => {
-        console.log('Data channel established successfully');
-        addChatMessage('System', '🔒 Ultra-fast secure connection established!');
-        updateFileList();
-        enableUI();
-      };
-
-      channel.onmessage = async (e) => {
-        try {
-          await handleDataMessage(e.data);
-        } catch (err) {
-          console.error("Message handling error:", err);
-          addChatMessage('System', '⚠️ Error processing received data');
-        }
-      };
-
-      channel.onerror = (error) => {
-        console.warn('Data channel error:', error);
-      };
-
-      channel.onclose = () => {
-        console.warn('Data channel closed');
-        addChatMessage('System', '⚠️ Connection interrupted. You may need to reconnect.');
-        disableUI();
-        cleanupCall(); // Clean up any ongoing calls
-      };
-    }
-
-    // Update the handleDataMessage function to include call handling
-    // Replace the existing handleDataMessage function with this enhanced version:
-
-    async function handleDataMessage(data) {
-      if (typeof data === 'string') {
-        try {
-          const obj = JSON.parse(data);
-
-          switch (obj.type) {
-            case 'file-meta':
-              fileMetadata = obj;
-              receivedChunks = [];
-              transferStartTime = Date.now();
-              totalBytesTransferred = 0;
-              showProgress(0, `Receiving ${obj.name}`, 0);
-              addChatMessage('System', `📥 Receiving: ${obj.name} (${formatFileSize(obj.size)})`);
-              break;
-
-            case 'file-complete':
-              completeFileReceive();
-              break;
-
-            case 'chat':
-              addChatMessage('Remote User', obj.msg);
-              break;
-
-            // New call handling cases
-            case 'call-request':
-              if (!isInCall) {
-                showIncomingCall(obj.callType);
-              } else {
-                // Send busy signal
-                if (dataChannel && dataChannel.readyState === 'open') {
-                  dataChannel.send(JSON.stringify({
-                    type: 'call-busy'
-                  }));
-                }
-              }
-              break;
-
-            case 'call-answer':
-              if (obj.accepted) {
-                showCallUI();
-                addChatMessage('System', `✅ ${callType} call connected!`);
-              } else {
-                cleanupCall();
-                addChatMessage('System', '📞 Call declined');
-                showNotification('Call declined', 'info');
-              }
-              break;
-
-            case 'call-end':
-              cleanupCall();
-              addChatMessage('System', '📞 Call ended by remote user');
-              showNotification('Call ended', 'info');
-              break;
-
-            case 'call-busy':
-              cleanupCall();
-              addChatMessage('System', '📞 User is busy');
-              showNotification('User is busy', 'error');
-              break;
-          }
-        } catch (err) {
-          // If it's not JSON, treat as a regular chat message
-          addChatMessage('Remote User', data);
-        }
-      } else {
-        // Binary data - file chunk
-        if (fileMetadata) {
-          receivedChunks.push(data);
-          const chunkLength = data instanceof ArrayBuffer ? data.byteLength : (data.size || 0);
-          totalBytesTransferred += chunkLength;
-
-          const progress = Math.min((totalBytesTransferred / fileMetadata.size) * 100, 100);
-          const elapsed = Math.max((Date.now() - transferStartTime) / 1000, 0.001);
-          const speed = totalBytesTransferred / elapsed;
-
-          showProgress(progress, `Receiving ${fileMetadata.name}`, speed);
-        }
-      }
-    }
-
-    // Update the startWebRTC function to handle media streams
-    // Replace the existing startWebRTC function with this enhanced version:
-
-    function startWebRTC() {
-      pc = new RTCPeerConnection({
-        iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' }
-        ]
-      });
-
-      pc.onicecandidate = (event) => {
-        if (event.candidate && ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({
-            type: 'candidate',
-            candidate: event.candidate
-          }));
-        }
-      };
-
-      pc.ondatachannel = (event) => {
-        dataChannel = event.channel;
-        setupDataChannel(dataChannel);
-      };
-
-      // Handle incoming media streams
-      pc.ontrack = (event) => {
-        console.log('Received remote stream');
-        remoteStream = event.streams[0];
-        const remoteVideo = document.getElementById('remoteVideo');
-        if (remoteVideo) {
-          remoteVideo.srcObject = remoteStream;
-        }
-      };
-
-      if (role === 'creator') {
-        dataChannel = pc.createDataChannel('data', {
-          ordered: true,
-          maxRetransmits: 3
-        });
-        setupDataChannel(dataChannel);
-
-        pc.createOffer().then(offer => {
-          pc.setLocalDescription(offer);
-          if (ws && ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify(offer));
-          }
-        }).catch(err => {
-          console.error('Offer creation failed:', err);
-          addChatMessage('System', '❌ Failed to create connection offer');
-        });
-      }
-    }
-
-    // Update the disconnect function to clean up calls
-    // Replace the existing disconnect function with this enhanced version:
-
-    function disconnect() {
-      try {
-        cleanupCall(); // Clean up any ongoing calls
-        if (dataChannel) dataChannel.close();
-        if (pc) pc.close();
-        if (ws) ws.close();
-      } catch (e) {
-        console.warn('Error during disconnect:', e);
-      }
-
-      resetState();
-
-      const chatArea = document.getElementById('chat');
-      const msgBox = document.getElementById('msgBox');
-
-      if (chatArea) chatArea.value = '';
-      if (msgBox) msgBox.value = '';
-
-      hideProgress();
-      showSection('roleSelect');
-      showNotification('Disconnected successfully', 'success');
     }
 
     // Expose some functions for debugging (development only)
@@ -3437,5 +2509,4 @@
 
   </script>
 </body>
-
 </html>
