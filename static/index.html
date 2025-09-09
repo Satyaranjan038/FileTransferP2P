@@ -2099,7 +2099,7 @@
       } catch (err) {
         console.error('Error during file transfer:', err);
         addChatMessage('System', '❌ Error during transfer: ' + err.message);
-        showNotification('Transfer error occurred', 'error');
+        showNotification('Transfer error occurred', String(err.message));
       } finally {
         isTransferring = false;
         if (sendBtn) {
