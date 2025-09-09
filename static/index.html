@@ -1104,19 +1104,19 @@ let ws, pc, dataChannel;
 let role;
 let receivedChunks = [];
 let fileMetadata = null;
-let selectedFiles = []; // { file: File, selected: boolean, id: string }
+let selectedFiles = [];
 let isTransferring = false;
 let transferStartTime = 0;
 let totalBytesTransferred = 0;
-let receivedFiles = []; // { id: string, name, size, url }
+let receivedFiles = [];
 let selectedDownloads = new Set();
 
 // Tunables
-const CHUNK_SIZE = 64 * 1024; // 64KB
-const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024; // 5GB
-const MAX_FILE_COUNT = 100; // support up to 100 files per send batch
-const MAX_SCTP_BUFFERED = 16 * 1024 * 1024; // 16 MB
-const BUFFERED_LOW_THRESHOLD = 8 * 1024 * 1024; // 8 MB
+const CHUNK_SIZE = 64 * 1024; 
+const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024; 
+const MAX_FILE_COUNT = 100;
+const MAX_SCTP_BUFFERED = 16 * 1024 * 1024;
+const BUFFERED_LOW_THRESHOLD = 8 * 1024 * 1024;
 
 function showSection(sectionId) {
   document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
@@ -1131,7 +1131,6 @@ function goBack() {
 }
 
 function resetState() {
-  // Clear selection but preserve receivedFiles unless clearAll called
   selectedFiles = [];
   selectedDownloads.clear();
   updateFileList();
@@ -1216,10 +1215,7 @@ function startWebRTC() {
   };
 
   if (role === 'creator') {
-    dataChannel = pc.createDataChannel('data', {
-      ordered: true, // use ordered delivery for easier reassembly and fewer lost chunks
-      // omit unreliable options; use SCTP flow-control instead
-    });
+    dataChannel = pc.createDataChannel('data', { ordered: true });
     setupDataChannel(dataChannel);
     pc.createOffer().then(offer => {
       pc.setLocalDescription(offer);
@@ -1231,11 +1227,8 @@ function startWebRTC() {
 function setupDataChannel(channel) {
   channel.binaryType = 'arraybuffer';
   try {
-    // Friendly thresholds for backpressure control
     channel.bufferedAmountLowThreshold = BUFFERED_LOW_THRESHOLD;
-  } catch (e) {
-    // Some browsers may throw when setting threshold; ignore gracefully
-  }
+  } catch (e) {}
 
   channel.onopen = () => {
     console.log('Data channel open');
@@ -1244,17 +1237,20 @@ function setupDataChannel(channel) {
   };
 
   channel.onmessage = async (e) => {
-    await handleDataMessage(e.data);
+    try {
+      await handleDataMessage(e.data);
+    } catch (err) {
+      console.error("Message handling error", err);
+    }
   };
 
   channel.onerror = (error) => {
-    console.error('Data channel error:', error);
-    addChatMessage('System', '❌ Connection error occurred');
+    console.warn('⚠️ Data channel error (ignored during transfer):', error);
+    // Do not disconnect — just log
   };
 
-  // Optional: monitor buffer growth for debugging
-  channel.onbufferedamountlow = () => {
-    // unblocks sender waiting promise
+  channel.onclose = () => {
+    console.warn('⚠️ Data channel closed. Waiting until transfer ends or reconnect manually.');
   };
 }
 
@@ -1275,22 +1271,17 @@ async function handleDataMessage(data) {
         addChatMessage('Peer', obj.msg);
       }
     } catch (err) {
-      // not JSON -> chat text
       addChatMessage('Peer', data);
     }
   } else {
-    // binary chunk (ArrayBuffer or Blob). Push raw data — Blob / ArrayBuffer mix is OK for new Blob([...])
     if (fileMetadata) {
       receivedChunks.push(data);
       const chunkLength = (data instanceof ArrayBuffer) ? data.byteLength : (data.size || 0);
       totalBytesTransferred += chunkLength;
-
       const progress = (totalBytesTransferred / fileMetadata.size) * 100;
       const elapsed = Math.max((Date.now() - transferStartTime) / 1000, 0.001);
       const speed = totalBytesTransferred / elapsed;
       showProgress(Math.min(progress, 100), `Receiving ${fileMetadata.name}`, speed);
-    } else {
-      console.warn('Received binary data but no file metadata present');
     }
   }
 }
@@ -1303,7 +1294,7 @@ function completeFileReceive() {
       name: fileMetadata.name,
       size: fileMetadata.size,
       url: url,
-      id: `${Date.now()}-${Math.random().toString(36).slice(2,9)}` // string ID
+      id: `${Date.now()}-${Math.random().toString(36).slice(2,9)}`
     };
     receivedFiles.push(fileInfo);
     updateDownloadSection();
@@ -1592,16 +1583,14 @@ async function sendFiles() {
   try {
     for (let i = 0; i < filesToSend.length; i++) {
       await sendSingleFile(filesToSend[i].file);
-      // short gap between files to give UI time to update and small protocol breathing
       await sleep(150);
     }
     addChatMessage('System', `✅ All files sent successfully! (${filesToSend.length} files)`);
-    // remove sent files from selectedFiles
     selectedFiles = selectedFiles.filter(f => !f.selected);
     updateFileList();
   } catch (err) {
     console.error('Error while sending files', err);
-    addChatMessage('System', '❌ Error while sending files');
+    addChatMessage('System', '❌ Error while sending files, but connection kept alive.');
   } finally {
     isTransferring = false;
     document.getElementById('sendFileBtn').disabled = false;
@@ -1609,45 +1598,85 @@ async function sendFiles() {
   }
 }
 
+// async function sendSingleFile(file) {
+//   if (!dataChannel || dataChannel.readyState !== 'open') throw new Error('DataChannel not open');
+//   const metadata = { type: 'file-meta', name: file.name, size: file.size };
+//   dataChannel.send(JSON.stringify(metadata));
+//   addChatMessage('You', `📤 Sending: ${file.name} (${formatFileSize(file.size)})`);
+
+//   transferStartTime = Date.now();
+//   totalBytesTransferred = 0;
+
+//   let offset = 0;
+//   showProgress(0, `Sending ${file.name}`, 0);
+
+//   while (offset < file.size) {
+//     const chunkEnd = Math.min(offset + CHUNK_SIZE, file.size);
+//     const chunk = await file.slice(offset, chunkEnd).arrayBuffer();
+
+//     // backpressure control: wait if bufferedAmount is too large
+//     await waitForBufferBelow(MAX_SCTP_BUFFERED);
+
+//     // send chunk
+//     try {
+//       dataChannel.send(chunk);
+//     } catch (err) {
+//       console.error('send error', err);
+//       throw err;
+//     }
+
+//     offset = chunkEnd;
+//     totalBytesTransferred += chunk.byteLength;
+
+//     const progress = (offset / file.size) * 100;
+//     const elapsed = Math.max((Date.now() - transferStartTime) / 1000, 0.001);
+//     const speed = totalBytesTransferred / elapsed;
+//     showProgress(progress, `Sending ${file.name}`, speed);
+//   }
+
+//   // signal complete for this file
+//   dataChannel.send(JSON.stringify({ type: 'file-complete' }));
+//   addChatMessage('System', `✅ Sent: ${file.name}`);
+// }
+
 async function sendSingleFile(file) {
   if (!dataChannel || dataChannel.readyState !== 'open') throw new Error('DataChannel not open');
   const metadata = { type: 'file-meta', name: file.name, size: file.size };
-  dataChannel.send(JSON.stringify(metadata));
-  addChatMessage('You', `📤 Sending: ${file.name} (${formatFileSize(file.size)})`);
+  safeSend(JSON.stringify(metadata));
 
+  addChatMessage('You', `📤 Sending: ${file.name} (${formatFileSize(file.size)})`);
   transferStartTime = Date.now();
   totalBytesTransferred = 0;
-
   let offset = 0;
   showProgress(0, `Sending ${file.name}`, 0);
 
   while (offset < file.size) {
     const chunkEnd = Math.min(offset + CHUNK_SIZE, file.size);
     const chunk = await file.slice(offset, chunkEnd).arrayBuffer();
-
-    // backpressure control: wait if bufferedAmount is too large
     await waitForBufferBelow(MAX_SCTP_BUFFERED);
-
-    // send chunk
-    try {
-      dataChannel.send(chunk);
-    } catch (err) {
-      console.error('send error', err);
-      throw err;
-    }
-
+    safeSend(chunk);
     offset = chunkEnd;
     totalBytesTransferred += chunk.byteLength;
-
     const progress = (offset / file.size) * 100;
     const elapsed = Math.max((Date.now() - transferStartTime) / 1000, 0.001);
     const speed = totalBytesTransferred / elapsed;
     showProgress(progress, `Sending ${file.name}`, speed);
   }
 
-  // signal complete for this file
-  dataChannel.send(JSON.stringify({ type: 'file-complete' }));
+  safeSend(JSON.stringify({ type: 'file-complete' }));
   addChatMessage('System', `✅ Sent: ${file.name}`);
+}
+
+function safeSend(data) {
+  try {
+    if (dataChannel && dataChannel.readyState === 'open') {
+      dataChannel.send(data);
+    } else {
+      console.warn("Send skipped: channel not open");
+    }
+  } catch (err) {
+    console.warn("Send error ignored:", err);
+  }
 }
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
