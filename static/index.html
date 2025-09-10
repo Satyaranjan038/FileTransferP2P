@@ -1657,8 +1657,8 @@ function startWebRTC() {
   if (role === 'creator') {
     dataChannel = pc.createDataChannel('data', { 
       ordered: true,
-      maxRetransmits: 3,
-      maxPacketLifeTime: 30000 // 30 second timeout
+      maxRetransmits: 3
+      // Note: Cannot use both maxRetransmits and maxPacketLifeTime simultaneously
     });
     setupDataChannel(dataChannel);
     
