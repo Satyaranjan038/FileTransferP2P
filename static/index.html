@@ -1385,7 +1385,7 @@ let isReconnecting = false;
 let currentTransferFile = null;
 
 // Enhanced Configuration
-const CHUNK_SIZE = 16 * 1024; // Reduced chunk size for better stability
+const CHUNK_SIZE = 128 * 1024; // Reduced chunk size for better stability
 const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024; 
 const MAX_FILE_COUNT = 100;
 const MAX_SCTP_BUFFERED = 4 * 1024 * 1024; // Reduced buffer size
